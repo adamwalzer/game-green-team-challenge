@@ -42,7 +42,7 @@
 }
 
 @mixin complete-sprite($column, $width: 0, $height: 0) {
-    @include sprite($sprite + 'levelandroundcompleted.png', 1450px, 200px, 2, 1, $column, 1, 1, $width, $height);
+    @include sprite($sprite + 'levelandroundcompleted.png', 1450px, 110px, 2, 1, $column, 1, 1, $width, $height);
 }
 
 @mixin level-flips($row, $class: frame, $scale: 1.8) {
@@ -256,7 +256,7 @@
         [data-ref=complete] {
             &::before {
                 @include center;
-                @include complete-sprite(2);
+                @include complete-sprite(1);
                 content: '';
             }
         }
@@ -279,7 +279,7 @@
         .reveal {
             [data-ref=complete] {
                 &::before {
-                    @include complete-sprite(1);
+                    @include complete-sprite(2);
                 }
             }
         }
