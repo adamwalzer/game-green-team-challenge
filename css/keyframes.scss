@@ -1,3 +1,16 @@
+@import 'variables';
+@import 'mixins';
+
+@keyframes button-flash {
+    0%, 100% {
+        @include bin-button(1);
+    }
+
+    50% {
+        @include bin-button(2);
+    }
+}
+
 $transform: scale(1.3) translateX(-50%) translateY(185px);
 @keyframes pour {
     0% {
