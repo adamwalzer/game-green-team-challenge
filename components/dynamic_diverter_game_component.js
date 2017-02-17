@@ -1,3 +1,5 @@
+import classNames from 'classnames';
+
 import ManualDropper from 'shared/components/manual_dropper/0.1';
 import Carousel from 'shared/components/carousel/0.1';
 import Dropzone from 'shared/components/dropzone/0.4';
@@ -123,6 +125,9 @@ export default function (props, ref, key, opts = {}) {
                         {PTS}
                     </skoash.Score>
                     <skoash.Timer
+                        className={classNames({
+                            final: _.get(props, 'data.timer.final')
+                        })}
                         countDown
                         format="mm:ss"
                         timeout={opts.timeout}

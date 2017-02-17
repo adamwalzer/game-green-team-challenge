@@ -114,6 +114,9 @@ export default function (props, ref, key, opts = {}) {
                         {PTS}
                     </skoash.Score>
                     <skoash.Timer
+                        className={classNames({
+                            final: _.get(props, 'data.timer.final')
+                        })}
                         countDown
                         format="mm:ss"
                         timeout={opts.timeout}

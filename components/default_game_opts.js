@@ -118,8 +118,20 @@ export default {
                 let secondsLeft = (this.props.timeout - this.state.time) / 1000;
                 if (secondsLeft === 10) {
                     this.updateScreenData({
-                        key: 'play',
-                        data: 'timer',
+                        data: {
+                            play: 'timer',
+                            timer: {
+                                final: true,
+                            },
+                        }
+                    });
+                } else {
+                    this.updateScreenData({
+                        data: {
+                            timer: {
+                                final: false,
+                            },
+                        },
                     });
                 }
             },
