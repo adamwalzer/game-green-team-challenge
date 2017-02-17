@@ -1,0 +1,25 @@
+@import 'variables';
+@import 'mixins';
+
+#quit {
+    .container {
+        @include center;
+        @include background('#{$frame}frame.02.png');
+        padding-top: 100px;
+        padding-right: 10px;
+        width: 660px;
+        height: 440px;
+        text-align: center;
+        text-transform: uppercase;
+        text-shadow: 2px 2px 2px $white;
+        color: $black;
+    }
+
+    h2 {
+        font-size: 44px;
+    }
+
+    button {
+        margin: 20px 35px;
+    }
+}

@@ -1,0 +1,13 @@
+@import 'variables';
+
+@font-face {
+    font-family: 'GROBOLD';
+    src: url('#{$font}GROBOLD.eot'); /* IE9 Compat Modes */
+    src: url('#{$font}GROBOLD.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+        url('#{$font}GROBOLD.woff') format('woff'), /* Modern Browsers */
+        url('#{$font}GROBOLD.ttf')  format('truetype'), /* Safari, Android, iOS */
+        url('#{$font}GROBOLD.svg#b4fcf0619605c0741b2b68439849ea35') format('svg'); /* Legacy iOS */
+
+    font-style: normal;
+    font-weight: 700;
+}

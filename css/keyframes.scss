@@ -1,0 +1,53 @@
+$transform: scale(1.3) translateX(-50%) translateY(185px);
+@keyframes pour {
+    0% {
+        transform: $transform rotate(0deg) scale(2);
+    }
+
+    50% {
+        transform: $transform rotate(-45deg) scale(2);
+    }
+
+    100% {
+        transform: $transform rotate(0deg) scale(2);
+    }
+}
+
+$fantastic-transform: translateX(400px) translateY(-50%);
+$move: translateX(400px) translateY(-50%);
+@keyframes fantastic-pour {
+    0% {
+        transform: $fantastic-transform rotate(0deg);
+    }
+
+    25% {
+        transform: $move rotate(0deg);
+    }
+
+    50% {
+        transform: $move rotate(45deg);
+    }
+
+    75% {
+        transform: $move rotate(0deg);
+    }
+
+    100% {
+        transform: $fantastic-transform rotate(0deg);
+    }
+}
+
+$master-transform: translateX(-50%) translateY(-50%);
+@keyframes master-pour {
+    0% {
+        transform: $master-transform rotate(0deg);
+    }
+
+    50% {
+        transform: $master-transform rotate(-45deg);
+    }
+
+    100% {
+        transform: $master-transform rotate(0deg);
+    }
+}

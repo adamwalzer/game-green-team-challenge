@@ -1,0 +1,344 @@
+@import 'variables';
+@import '../../shared/css/mixins/import';
+
+@mixin text-shadow {
+    text-shadow: 2px 2px 2px $text-shadow;
+}
+
+@mixin mirror($transform: translateX(0)) {
+    transform: $transform scale3d(-1, 1, 1);
+}
+
+@mixin nav-button($column, $width: 0, $height: 0) {
+    @include sprite($sprite + 'sprite.mainnav.png', 888px, 200px, 5, 2, $column, 1, 2, $width, $height);
+}
+
+@mixin yesno-button($column, $width: 0, $height: 0) {
+    @include sprite($sprite + 'sprite.yesno.png', 215px, 220px, 2, 2, $column, 1, 2, $width, $height);
+}
+
+@mixin bin-button($row: 1, $width: 0, $height: 0) {
+    @include sprite($sprite + 'sprite.btn.png', 82px, 180px, 1, 2, 1, $row, 2, $width, $height);
+}
+
+@mixin star-sprite($row, $width: 0, $height: 0) {
+    @include sprite($sprite + 'sprite.star.png', 91px, 186px, 1, 2, 1, $row, $row, $width, $height);
+}
+
+@mixin levels-sprite($row, $width: 0, $height: 0) {
+    @include sprite($sprite + 'sprite.levels.png', 420px, 100px, 1, 2, 1, $row, $row, $width, $height);
+}
+
+@mixin bin-sprite($column, $width: 0, $height: 0) {
+    @include sprite($sprite + 'sprite.bins.png', 850px, 195px, 5, 1, $column, 1, 1, $width, $height);
+}
+
+@mixin flip-sprite($column, $row, $width: 0, $height: 0) {
+    @include sprite($sprite + 'flips.png', 855px, 280px, 6, 2, $column, $row, $row, $width, $height);
+}
+
+@mixin truck-sprite($column, $width: 0, $height: 0) {
+    @include sprite($sprite + 'dumptruck.png', 758px, 191px, 3, 1, $column, 1, 1, $width, $height);
+}
+
+@mixin complete-sprite($column, $width: 0, $height: 0) {
+    @include sprite($sprite + 'levelandroundcompleted.png', 1450px, 200px, 2, 1, $column, 1, 1, $width, $height);
+}
+
+@mixin level-flips($row, $class: frame, $scale: 1.8) {
+    $flips: 2 4 5 3 6 1;
+    @for $i from 1 through length($flips) {
+        &[id*=-level-#{$i}] {
+            .#{$class}::after {
+                @include flip-sprite(nth($flips, $i), $row);
+                @include position(absolute, null 140px 40px null);
+                display: block;
+                transform: translateY(-1000px) scale($scale);
+                transition: transform .5s $bounce;
+                content: '';
+            }
+
+            &.APPEAR {
+                .#{$class}::after {
+                    transform: scale($scale);
+                }
+            }
+        }
+    }
+}
+
+@mixin bins() {
+    position: relative;
+
+    &::before {
+        @include center;
+        transform: translateX(-50%) translateY(-50%);
+        content: '';
+    }
+
+    $bins: compost landfill recycle food-share liquids;
+    @for $i from 1 through length($bins) {
+        &.#{nth($bins, $i)} {
+            &::before {
+                @include bin-sprite($i);
+            }
+        }
+    }
+}
+
+@mixin sortable-item($scale: .5) {
+    .sprite {
+        @include center;
+        transform: translateX(-50%) translateY(-50%) scale($scale);
+        pointer-events: none;
+    }
+}
+
+@mixin vertical-score-meter($steps: 4, $meter-color: url('#{$image}meter-full.png')) {
+    @include background('#{$image}pipe.meter.png');
+    display: inline-block;
+    position: absolute;
+    z-index: 1;
+    background-position: left center;
+    background-size: auto 100%;
+    width: 80px;
+    height: 200px;
+    vertical-align: middle;
+
+    &::after {
+        position: absolute;
+        top: 43px;
+        left: 24px;
+        opacity: .6;
+        z-index: 1;
+        border-radius: 10px;
+        background-color: $white;
+        width: 5px;
+        height: 117px;
+        content: '';
+    }
+
+    span {
+        @include cover;
+        display: block;
+        position: absolute;
+        top: 38px;
+        left: 9px;
+        width: 27px;
+        height: 132px;
+        color: transparent;
+        font-size: 0;
+
+        &::before,
+        &::after {
+            display: block;
+            position: absolute;
+            border-radius: 50px;
+            width: 100%;
+            content: '';
+        }
+
+        &::before {
+            bottom: 0;
+            left: 0;
+            height: 100%;
+        }
+
+        &::after {
+            bottom: 0;
+            left: 0;
+
+            // scss-lint:disable VendorPrefix
+            -webkit-transition: height .5s cubic-bezier(.53, 0, .63, 1);
+            // scss-lint:enable VendorPrefix
+            transition: height .5s cubic-bezier(.53, -.56, .63, 1.74);
+
+            background: $meter-color;
+            background-repeat: no-repeat;
+            background-size: cover;
+
+            height: 0;
+        }
+    }
+
+    @for $i from 0 through $steps {
+        &.score-#{$i} {
+            span::after {
+                height: percentage($i / $steps);
+            }
+        }
+    }
+}
+
+@mixin game-gages {
+    .top-left {
+        @include position(absolute, 0 null null 0);
+        z-index: 4;
+
+        > div {
+            @include background('#{$image}container.png');
+            display: inline-block;
+            margin: 5px;
+            padding: 20px 0;
+            width: 180px;
+            color: $black;
+            font-size: 30px;
+        }
+    }
+
+    .item-name {
+        @include background('#{$image}vertical.pipe.png');
+        @include position(absolute, 0 50px null null);
+        z-index: 4;
+        background-position: center bottom;
+        background-size: 100%;
+        width: 300px;
+        height: 120px;
+
+        span {
+            @include center;
+            top: 55%;
+            left: 49%;
+            width: 80%;
+        }
+    }
+
+    .life {
+        @include vertical-score-meter(-5);
+        top: 200px;
+        right: 0;
+        left: auto;
+        z-index: 4;
+    }
+}
+
+@mixin game-reveal {
+    .reveal {
+        &.OPEN {
+            z-index: 5;
+        }
+
+        li {
+            width: 100%;
+            height: 100%;
+
+            $names: resort retry complete;
+            $colors: $transparent-red $transparent-red $transparent-white;
+            @for $i from 1 through length($names) {
+                &[data-ref=#{nth($names, $i)}] {
+                    background-color: #{nth($colors, $i)};
+                }
+            }
+        }
+
+        [data-ref=retry],
+        [data-ref=resort] {
+            &::before {
+                @include center;
+                width: 400px;
+                height: 200px;
+                content: '';
+            }
+        }
+
+        [data-ref=retry] {
+            &::before {
+                @include background('#{$image}Img.anotherChance.png');
+            }
+        }
+
+        [data-ref=resort] {
+            &::before {
+                @include background('#{$image}img.resort.png');
+            }
+        }
+
+        [data-ref=complete] {
+            &::before {
+                @include center;
+                @include complete-sprite(2);
+                content: '';
+            }
+        }
+
+        &.open-resort,
+        &.open-complete {
+            .close-reveal {
+                display: none;
+            }
+        }
+
+        &.open-retry {
+            .close-reveal {
+                @include position(absolute, null 150px 150px null);
+            }
+        }
+    }
+
+    &[id*='5'] {
+        .reveal {
+            [data-ref=complete] {
+                &::before {
+                    @include complete-sprite(1);
+                }
+            }
+        }
+    }
+}
+
+@mixin master-sorter-tray-item {
+    $tops:  25 25 25 50 50;
+    $lefts: 20 50 80 20 80;
+    @for $i from 1 through length($tops) {
+        &:nth-of-type(#{$i}) {
+            top: percentage(nth($tops, $i) / 100);
+            left: percentage(nth($lefts, $i) / 100);
+        }
+    }
+}
+
+@mixin master-sorter-tray {
+    $lefts: 35 150;
+    @for $i from 1 through length($lefts) {
+        &:nth-of-type(#{$i}) {
+            left: percentage(nth($lefts, $i) / 100);
+        }
+    }
+
+    $bins:  LIQUIDS FOOD-SHARE   RECYCLE  LANDFILL   COMPOST TRAY-STACKING HOME;
+    $tops:       70       -250      -250      -250      -250          -250  500;
+    $lefts:     -15       -205       -15       180       375           540  210;
+    @for $i from 1 through length($bins) {
+        &.#{nth($bins, $i)} {
+            top: #{nth($tops, $i)}px;
+            left: #{nth($lefts, $i)}px;
+            transform: scale(.5) translateX(-50%) translateY(-50%);
+            transition: top .25s .25s, left .25s 0s, transform .5s;
+        }
+    }
+}
+
+@mixin master-sorter-catchable {
+    @include center;
+    @include size(60px);
+    transition: top .25s 0s, left .25s .25s, transform .5s;
+
+    $bins:  LIQUIDS FOOD-SHARE   RECYCLE  LANDFILL   COMPOST TRAY-STACKING;
+    $tops:       15       -250      -250      -250      -250          -250;
+    $lefts:    -110       -270       -90        90       270           440;
+    @for $i from 1 through length($bins) {
+        &.#{nth($bins, $i)} {
+            top: #{nth($tops, $i)}px;
+            left: #{nth($lefts, $i)}px;
+            transition: top .25s .25s, left .25s 0s, transform .5s;
+        }
+    }
+
+    &.CAUGHT {
+        display: none;
+    }
+
+    &.POUR {
+        animation: master-pour 1s;
+    }
+}

@@ -1,0 +1,215 @@
+@import 'variables';
+@import 'mixins';
+
+[id*=master-sorter] {
+    @include game-gages;
+    @include game-reveal;
+
+    .top-left {
+        @include center;
+        top: auto;
+        bottom: -30px;
+    }
+
+    .tray-stacking-title {
+        @include position(absolute, 0 20px null null);
+        @include size(250px 70px);
+
+        span {
+            @include center;
+            font-size: 18px;
+        }
+
+        &::before {
+            @include background('#{$image}vertical.pipe.png');
+            @include position(absolute, null null 0 0);
+            @include size(250px 250px);
+            display: block;
+            content: '';
+        }
+    }
+
+    .item-name {
+        transform: translateX(-40%);
+        transition: opacity .5s;
+        opacity: 0;
+        border: 2px solid $black;
+        border-radius: 8px;
+        background-color: $white;
+        background-image: none;
+        height: 80px;
+        text-shadow: none;
+        color: $black;
+        pointer-events: none;
+
+        &.ACTIVE {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        span {
+            left: 50%;
+            font-size: 24px;
+        }
+    }
+
+    .life {
+        top: 25%;
+    }
+
+    .manual-dropper {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        transition: transform .5s;
+        width: 75%;
+        height: 75%;
+
+        .items {
+            @include cover;
+
+            > * {
+                @include master-sorter-catchable;
+                @include master-sorter-tray;
+                @include sortable-item(.75);
+                top: 60%;
+                width: 250px;
+                height: 250px;
+
+                .catchable {
+                    @include master-sorter-tray-item;
+                    @include master-sorter-catchable;
+                }
+
+                $trays:  tray   tray-pink   tray-blue;
+                $images: tray 'tray.pink' 'tray.blue';
+                @for $i from 1 through length($trays) {
+                    &.#{nth($trays, $i)}::before {
+                        @include center;
+                        @include size(150%);
+                        @include background('#{$image}#{nth($images, $i)}.png');
+                        display: block;
+                        content: '';
+                    }
+                }
+            }
+        }
+    }
+
+    .bins {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 94%;
+        height: 200px;
+
+        &::before {
+            @include background('#{$image}shelf.png');
+            display: block;
+            position: absolute;
+            bottom: 5px;
+            left: 0;
+            width: 100%;
+            height: 20px;
+            content: '';
+        }
+
+        &.DISABLED {
+            pointer-events: none;
+        }
+
+        .catch,
+        .selectable {
+            @include cover;
+            display: flex;
+            height: 100%;
+            justify-content: center;
+        }
+
+        .catch {
+            div {
+                @include bins;
+                margin: 0 10px;
+                width: 200px;
+                height: 100%;
+
+                &.food-share {
+                    margin-top: 25px;
+                }
+
+                &.liquids {
+                    @include position(absolute, 300px null null -200px);
+                    background-color: $transparent;
+
+                    &::before {
+                        @include position(absolute, 30px null null 240px);
+                        transform: translateX(-50%) translateY(-50%) scale(2) rotate(45deg);
+                    }
+                }
+
+                &.tray-stacking {
+                    &::before {
+                        @include size(200px 400px);
+                        @include background('#{$image}pipe.meter2.png');
+                        top: 40px;
+                        content: '';
+                    }
+                }
+
+                &.home {
+                    @include position(absolute, 750px null null 0);
+                    @include size (100% 200px);
+                }
+            }
+        }
+
+        .selectable {
+            li {
+                @include bin-button;
+                transform: scale(.7);
+                margin: 80px 50px;
+
+                &:nth-of-type(2) {
+                    margin-top: 105px;
+                    margin-right: 40px;
+                    margin-left: 50px;
+                }
+
+                &:nth-last-of-type(3) {
+                    margin-right: 230px;
+                }
+
+                &.liquids {
+                    @include position(absolute, 210px null null -55px);
+
+                    &::before {
+                        @include cover;
+                        left: 200px;
+                        background-color: $blue;
+                    }
+                }
+
+                &.tray-stacking {
+                    @include position(absolute, 93px null null 715px);
+                    transform: scale(.6);
+                }
+
+                &.home {
+                    @include position(absolute, 750px null null 0);
+                    @include size (100% 200px);
+                }
+            }
+        }
+    }
+
+    .pour {
+        @include position(absolute, 150px null null -20px);
+        transform: scale(.5);
+        opacity: 0;
+        z-index: -1;
+
+        &.show {
+            opacity: 1;
+        }
+    }
+}

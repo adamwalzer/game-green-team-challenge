@@ -1,0 +1,125 @@
+@import 'variables';
+@import 'mixins';
+
+[id*=priceless-pourer] {
+    @include game-gages;
+    @include game-reveal;
+
+    .manual-dropper {
+        position: absolute;
+        top: 0;
+        left: 25%;
+        transition: transform .5s;
+        width: 50%;
+        height: 100%;
+
+        .items {
+            @include cover;
+
+            > * {
+                @include sortable-item;
+                @include center;
+                top: 0;
+                transition: top .5s $ease-out, left .5s $ease-in, transform .5s;
+                width: 50px;
+                height: 50px;
+
+                $tops:   95  45   0 -55;
+                $scales:  2 1.6 1.2   1;
+                @for $i from 1 through length($tops) {
+                    &:nth-of-type(#{$i}) {
+                        transform: scale(#{nth($scales, $i)}) translateX(-50%) translateY(#{nth($tops, $i)}px);
+                        transform-origin: 0 0;
+                    }
+                }
+
+                $bins:  LIQUIDS   RECYCLE  LANDFILL   COMPOST;
+                $tops:     -120       200       200       200;
+                $lefts:     -30        10       240       460;
+                $tds: $ease-out  $ease-in  $ease-in  $ease-in;
+                $lds:  $ease-in $ease-out $ease-out $ease-out;
+                @for $i from 1 through length($bins) {
+                    &.#{nth($bins, $i)} {
+                        top: #{nth($tops, $i)}px;
+                        left: #{nth($lefts, $i)}px;
+                        transition: top .5s #{nth($tds, $i)}, left .5s #{nth($lds, $i)}, transform .5s;
+                    }
+                }
+
+                &.POUR {
+                    animation: pour 1s;
+                }
+            }
+        }
+    }
+
+    .bins {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 200px;
+    }
+
+    .catch,
+    .selectable {
+        @include cover;
+        display: flex;
+        height: 100%;
+        justify-content: center;
+
+    }
+
+    .catch {
+        div {
+            @include bins;
+            margin: 0 10px;
+            width: 200px;
+            height: 100%;
+
+            &::before {
+                transform: translateX(-50%) translateY(-50%) scale(1.5);
+            }
+
+            &.liquids {
+                @include position(absolute, -220px null null -40px);
+
+                &::before {
+                    transform: translateX(-50%) translateY(-50%) scale(2) rotate(60deg);
+                }
+            }
+        }
+    }
+
+    .selectable {
+        li {
+            @include bin-button;
+            margin: 110px 70px;
+
+            &:nth-of-type(2) {
+                margin-left: 63px;
+            }
+
+            &.liquids {
+                @include position(absolute, -260px null null -70px);
+            }
+        }
+    }
+
+    .belt {
+        @include center;
+        transform: translateX(-50%) translateY(-50%) scale(.5);
+        z-index: -1;
+    }
+
+    .pour {
+        @include position(absolute, 20px null null -50px);
+        transform: scale(.5);
+        opacity: 0;
+        z-index: -1;
+
+        &.show {
+            opacity: 1;
+        }
+    }
+}

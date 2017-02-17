@@ -1,0 +1,62 @@
+@import 'variables';
+@import 'mixins';
+
+[id*=post-level] {
+    @include level-flips(1);
+
+    .frame {
+        @include cover;
+        @include background('#{$frame}transition.frame.png');
+        padding-top: 75px;
+        color: $black;
+
+        h3,
+        h4 {
+            text-shadow: 2px 2px 2px $white;
+        }
+
+        .animated {
+            transform: translateY(-1000px);
+        }
+
+        h4 {
+            margin-top: -7px;
+            font-size: 24px;
+        }
+
+        div:not(.header) {
+            @include levels-sprite(2);
+            margin: 5px auto;
+            text-align: left;
+            text-shadow: none;
+
+            &.complete {
+                @include levels-sprite(1);
+            }
+
+            &:nth-of-type(1) {
+                margin-top: 25px;
+            }
+
+            p {
+                display: inline-block;
+                transform: scale3d(1, 1, 1);
+                vertical-align: middle;
+                line-height: 54px;
+                font-size: 24px;
+
+                &:nth-of-type(1) {
+                    width: 115px;
+                    text-align: center;
+                    font-size: 20px;
+                }
+            }
+        }
+    }
+
+    &.STARTED {
+        .animated {
+            animation-name: bounceInDown;
+        }
+    }
+}

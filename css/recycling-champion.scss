@@ -1,0 +1,98 @@
+@import 'variables';
+@import 'mixins';
+
+[id*=recycling-champion] {
+    @include game-gages;
+    @include game-reveal;
+
+    .manual-dropper {
+        position: absolute;
+        top: 100px;
+        left: 720px;
+        transition: transform .5s;
+        width: 100%;
+        height: 200px;
+
+        &::before {
+            @include cover;
+            display: block;
+            top: 19px;
+            left: 43px;
+            z-index: 1;
+            background: url('#{$image}pipe01.png');
+            background-repeat: no-repeat;
+            content: '';
+        }
+
+        .items {
+            @include cover;
+
+            > * {
+                @include sortable-item;
+                position: absolute;
+                transition: top .2s .5s, left .5s 0s, transform .5s, z-index 0s .7s;
+                width: 50px;
+                height: 50px;
+
+                $tops: 130  30   30;
+                $lefts: 75 200 1000;
+                $scales: 2   1    1;
+                $zindex: 1   0    0;
+                @for $i from 1 through length($tops) {
+                    &:nth-of-type(#{$i}) {
+                        top: #{nth($tops, $i)}px;
+                        left: #{nth($lefts, $i)}px;
+                        transform: scale(#{nth($scales, $i)});
+                        z-index: nth($zindex, $i);
+                    }
+                }
+
+                &.DROPPED {
+                    transform: translateY(250px) scale(1);
+                }
+            }
+        }
+    }
+
+    .bins {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 200px;
+    }
+
+    .catch,
+    .selectable {
+        @include cover;
+        display: flex;
+        height: 100%;
+        justify-content: center;
+    }
+
+    .catch {
+        top: 50px;
+
+        div {
+            @include bins;
+            margin: 0 10px;
+            width: 200px;
+            height: 100%;
+
+            &::before {
+                transform: translateX(-50%) translateY(-50%) scale(1.5);
+            }
+        }
+    }
+
+    .selectable {
+        li {
+            @include bin-button;
+            margin: 110px 70px;
+
+            &:nth-of-type(1) {
+                margin-left: 63px;
+            }
+        }
+    }
+}

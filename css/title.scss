@@ -1,0 +1,54 @@
+@import 'variables';
+@import 'mixins';
+
+#title {
+    .next-screen {
+        @include nav-button(3);
+    }
+
+    $text-shadow: 2px 2px 0 $red-orange,
+        text-stroke(4, $bright-yellow),
+        text-stroke(8, $red-orange),
+        10px 10px 4px $text-shadow;
+    $background: url('#{$image}gradient-texture.jpg');
+
+    h3 {
+        @include punch-out($text-shadow, $background, $color: $green);
+        z-index: 1;
+        margin-top: 30px;
+        font-size: 80px;
+    }
+
+    img {
+        position: absolute;
+    }
+
+    .trash {
+        right: -130px;
+        bottom: -170px;
+        width: 400px;
+    }
+
+    .character {
+        top: 70px;
+        left: -20px;
+        transform: scale3d(-1, 1, 1) rotate(-15deg);
+        width: 700px;
+    }
+
+    .tray {
+        top: -20px;
+        left: 370px;
+        width: 500px;
+    }
+
+    .fireworks {
+        @include cover;
+        z-index: -1;
+
+        img {
+            @include cover;
+            z-index: -1;
+        }
+    }
+}

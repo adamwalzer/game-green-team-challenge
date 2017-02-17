@@ -1,0 +1,213 @@
+@import 'variables';
+@import 'mixins';
+
+[id*=fantastic-food-sharer] {
+    @include game-gages;
+    @include game-reveal;
+
+    .manual-dropper {
+        position: absolute;
+        top: 50px;
+        left: 0;
+        width: 50%;
+        height: 100px;
+
+        .items {
+            @include cover;
+
+            > * {
+                @include sortable-item;
+                @include center;
+                @include size(50px);
+                left: 0;
+                transition: top .25s .25s, left .25s 0s, transform .5s;
+
+                $lefts: 400 150 -100;
+                @for $i from 1 through length($lefts) {
+                    &:nth-of-type(#{$i}) {
+                        transform: translateX(#{nth($lefts, $i)}px) translateY(-50%);
+                        transform-origin: 0 0;
+                    }
+                }
+
+                &.DROPPED {
+                    top: 200px;
+                    left: 130px;
+                    transition: top .25s 4.6s, left 1.4s 4s, transform .5s;
+                }
+
+                &.PICKUP {
+                    transition: top .25s 0s, left .25s .25s, transform .5s;
+                }
+
+                $bins: FOOD_SHARE  RECYCLE  LANDFILL   COMPOST   LIQUIDS;
+                $tops:        150      350       350       350       200;
+                $lefts:      -280     -220       -50       110       150;
+                @for $i from 1 through length($bins) {
+                    &.#{nth($bins, $i)} {
+                        top: #{nth($tops, $i)}px;
+                        left: #{nth($lefts, $i)}px;
+                        transition: top .25s .25s, left .25s 0s, transform .5s;
+                    }
+                }
+
+                &.POUR {
+                    animation: fantastic-pour 1s;
+                }
+            }
+        }
+    }
+
+    .bins {
+        position: absolute;
+        bottom: -20px;
+        left: 0;
+        width: 100%;
+        height: 200px;
+    }
+
+    .catch,
+    .selectable {
+        @include cover;
+        display: flex;
+        height: 100%;
+        justify-content: center;
+    }
+
+    .catch {
+        div {
+            @include bins;
+            margin: 0 -10px;
+            width: 180px;
+            height: 100%;
+
+            &::before {
+                transform: translateX(-50%) translateY(-50%);
+            }
+
+            &.recycle {
+                margin-left: 10px;
+            }
+
+            &.liquids {
+                top: 10px;
+                margin-left: 80px;
+
+                &::before {
+                    transform: translateX(-50%) translateY(-50%) scale(2);
+                }
+            }
+
+            &.food-share {
+                @include position(absolute, -140px null null -20px);
+
+                &::before {
+                    transform: translateX(-50%) translateY(-50%) scale(1.2) rotate(45deg);
+                }
+            }
+        }
+    }
+
+    .selectable {
+        li {
+            @include bin-button;
+            margin: 70px 40px;
+
+            &:nth-of-type(2) {
+                margin-left: 50px;
+            }
+
+            &.food-share {
+                @include position(absolute, -120px null null -50px);
+            }
+
+            &.liquids {
+                margin-top: 90px;
+                margin-left: 125px;
+            }
+        }
+    }
+
+    .extras {
+        .claw {
+            @include position(absolute, -180px null null 70px);
+            transform: scale(.3);
+        }
+
+        .belt {
+            @include position(absolute, 30px null null -250px);
+            transform: scale(.5);
+        }
+
+        .funnel {
+            @include position(absolute, 80px null null 190px);
+
+            .back,
+            .front {
+                transform: scale(.2);
+            }
+
+            .back {
+                @include position(absolute, 0 null null 0);
+                z-index: -1;
+            }
+
+            .front {
+                @include position(absolute, -107px null null 80px);
+            }
+        }
+
+        .truck {
+            @include position(absolute, 190px null null 510px);
+            @include size(200px 120px);
+            transition: transform .25s;
+            transform-origin: 50% 100%;
+
+            &::before,
+            &::after {
+                @include center;
+                display: block;
+                content: '';
+            }
+
+            &::before {
+                @include truck-sprite(1);
+                left: 40%;
+                transform: translateX(-50%) translateY(-50%) scale3d(-1, 1, 1);
+            }
+
+            &::after {
+                @include truck-sprite(3);
+                top: 100%;
+                left: 20%;
+                transform: translateX(-50%) translateY(-50%) scale(1.4);
+            }
+
+            &.TILT {
+                transform: rotate(-50deg);
+
+                &.liquids {
+                    transform: rotate(50deg);
+                }
+            }
+        }
+
+        .truck-stand {
+            @include truck-sprite(2);
+            @include position(absolute, 330px null null 470px);
+            transform: scale(1.2);
+            z-index: -1;
+        }
+
+        .pour {
+            @include position(absolute, 40px null null 460px);
+            transform: scale(.5);
+            opacity: 0;
+            z-index: -1;
+
+            &.show {
+                opacity: 1;
+            }
+        }
+    }
+}

@@ -1,0 +1,27 @@
+$media: $media-server + 'Games/green-team/';
+$sprite: $media + 'SpritesAnimations/';
+$image: $media + 'ImageAssets/';
+$frame: $media + 'Frames/';
+$font: $media + 'Font/';
+
+$black: #000;
+$white: #fff;
+$yellow: #ff6;
+$bright-yellow: #ff0;
+$red-orange: #cc3800;
+$mint: #b9e4bd;
+$text-color: $yellow;
+$text-shadow: rgba(0, 0, 0, .7);
+
+$transparent: transparent;
+$transparent-white: rgba(255, 255, 255, .6);
+$transparent-red: rgba(195, 97, 55, .9);
+$transparent-green: rgba(0, 97, 0, .9);
+
+// colors to be removed
+$green: #0f0;
+$blue: #00f;
+
+$ease-in: cubic-bezier(.66, .34, .8, .53);
+$ease-out: cubic-bezier(.26, .72, .6, .74);
+$bounce: cubic-bezier(.42, .15, .63, 1.35);

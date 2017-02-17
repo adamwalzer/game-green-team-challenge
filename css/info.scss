@@ -1,0 +1,98 @@
+@import 'variables';
+@import 'mixins';
+
+.screen.info {
+    $char-top: 5px;
+    $char-right: -35px;
+    $char-width: 650px;
+    $frame-top: 48%;
+    $frame-left: 20%;
+    $p-left: 67.5%;
+    $p-width: 48%;
+    $char-trans-x: 1000px;
+    $frame-trans-x: 1500px;
+
+    .character {
+        @include position(absolute, $char-top $char-right null null);
+        transform: translateX($char-trans-x);
+        transition: transform .5s 1.5s;
+        width: $char-width;
+    }
+
+    .frame {
+        @include center;
+        @include size(100% 85%);
+        top: $frame-top;
+        left: $frame-left;
+        transform: translateX(-$frame-trans-x) translateY(-50%);
+        transition: transform .5s 0s;
+
+        &::before {
+            @include cover;
+            @include background('#{$frame}frame.01.png');
+            content: '';
+        }
+
+        p {
+            @include center;
+            left: $p-left;
+            width: $p-width;
+        }
+    }
+
+    &.right {
+        .character {
+            @include position(absolute, $char-top auto null $char-right);
+            @include mirror(translateX(-$char-trans-x));
+        }
+
+        .frame {
+            top: 100% - $frame-top;
+            left: 100% - $frame-left;
+            transform: translateX($frame-trans-x) translateY(-50%);
+
+            &::before {
+                @include mirror;
+            }
+
+            p {
+                left: 100% - $p-left;
+            }
+        }
+    }
+
+    &.small {
+        p {
+            font-size: 28px;
+        }
+    }
+
+    &.STARTED {
+        .character {
+            transform: none;
+        }
+
+        .frame {
+            transform: translateX(-50%) translateY(-50%);
+        }
+
+        &.right {
+            .character {
+                @include mirror;
+            }
+        }
+    }
+}
+
+#dynamic-diverter-one-info {
+    .character {
+        top: -5px;
+        right: 55px;
+        transform: scale3d(-1, 1, 1);
+        width: 180px;
+    }
+
+    .sprite {
+        @include position(absolute, 220px -80px null null);
+    }
+}

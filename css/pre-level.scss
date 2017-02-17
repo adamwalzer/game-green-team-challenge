@@ -1,0 +1,82 @@
+@import 'variables';
+@import 'mixins';
+
+[id*=pre-level] {
+    @include level-flips(2, screen-content);
+
+    &.ALL_EARNED {
+        @include level-flips(1, screen-content);
+    }
+
+    .stars {
+        @include background('#{$image}purple.ribbon.png');
+        height: 280px;
+
+        div {
+            @include star-sprite(2);
+            @include center;
+            top: 52px;
+            transform-origin: 50% 800px;
+
+            &.earned {
+                @include star-sprite(1);
+            }
+
+            @for $i from 1 through 5 {
+                &:nth-of-type(#{$i}) {
+                    transform: translateX(-50%) translateY(-50%) rotate(#{8 * ($i - 3)}deg);
+                }
+            }
+        }
+    }
+
+    .frame {
+        @include background('#{$image}luggage.png');
+        @include center;
+        top: 61%;
+        transform: translateX(-1500px) translateY(-50%);
+        transition: transform 1s;
+        padding-top: 210px;
+        width: 500px;
+        height: 540px;
+        text-shadow: none;
+        color: $black;
+
+        &::before,
+        &::after {
+            @include center;
+            display: block;
+            z-index: -1;
+            border-radius: 30px;
+            box-shadow: 2px 2px 4px $text-shadow;
+            background-color: $mint;
+            content: '';
+        }
+
+        &::before {
+            opacity: .5;
+            width: 230px;
+            height: 160px;
+        }
+
+        &::after {
+            width: 218px;
+            height: 148px;
+        }
+
+        h3 {
+            text-shadow: 4px 4px 0 $white;
+            font-size: 54px;
+        }
+
+        p {
+            font-size: 24px;
+        }
+    }
+
+    &.STARTED {
+        .frame {
+            transform: translateX(-50%) translateY(-50%);
+        }
+    }
+}

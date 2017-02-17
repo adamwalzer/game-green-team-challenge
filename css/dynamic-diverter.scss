@@ -1,0 +1,88 @@
+@import 'variables';
+@import 'mixins';
+
+[id*=dynamic-diverter] {
+    @include game-gages;
+    @include game-reveal;
+
+    .bin-name {
+        @include background('#{$image}container.png');
+        @include position(absolute, null null 0 125px);
+        display: inline-block;
+        transform: scale3d(1, 1, 1);
+        z-index: 4;
+        margin: 5px;
+        padding: 20px 0;
+        width: 180px;
+        text-transform: capitalize;
+        color: $black;
+        font-size: 30px;
+    }
+
+    .dropzones {
+        > div {
+            @include position(absolute, 150px null null 120px);
+            @include size(150px 100px);
+            z-index: 2;
+
+            &::before {
+                @include background('#{$image}exhaust.png');
+                @include size(250px 480px);
+                @include position(absolute, null null -30px -100px);
+                display: block;
+                z-index: -1;
+                content: '';
+            }
+        }
+    }
+
+    .bins {
+        @include cover;
+
+        .items {
+            > div {
+                opacity: 0;
+                pointer-events: none;
+
+                &:nth-of-type(1) {
+                    opacity: 1;
+                    pointer-events: auto;
+                }
+            }
+        }
+
+        .carousel {
+            @include cover;
+            transition: opacity .5s;
+            opacity: 1;
+
+            &.LEAVE {
+                opacity: 0;
+            }
+
+            $bins: recycle landfill compost;
+            @for $i from 1 through length($bins) {
+                &.#{nth($bins, $i)} {
+                    @include background('#{$image}background.trash.#{nth($bins, $i)}.jpg');
+                }
+            }
+        }
+    }
+
+    .draggable {
+        @include size(100px);
+        position: absolute;
+        transition: opacity .5s;
+        opacity: 1;
+        z-index: 3;
+
+        &.CORRECT {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .sprite {
+            pointer-events: none;
+        }
+    }
+}
