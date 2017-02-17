@@ -4,6 +4,7 @@ import Catchable from 'shared/components/catchable/0.2';
 
 import defaultGameOpts from './default_game_opts';
 import ItemsToSort from './items_to_sort';
+import ItemsShare from './items_food_share';
 
 const PICKUP = 'PICKUP';
 const DROPPED = 'DROPPED';
@@ -46,7 +47,10 @@ const onItemPickUpTransitionEnd = function (itemRef) {
     }
 };
 
-let itemsToSort = _.filter(ItemsToSort, item => _.includes(binNames, item.bin));
+let itemsToSort = _.filter(
+    ItemsToSort.concat(ItemsShare),
+    item => _.includes(binNames, item.bin)
+);
 
 let getChildren = v => {
     if (v.children) return v.children;
