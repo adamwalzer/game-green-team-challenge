@@ -67,6 +67,7 @@ export default function (props, ref, key, opts = {}) {
         opts.playAudio = (
             play ? play :
             revealOpen === 'resort' ? 'resort' :
+            revealOpen === 'retry' ? 'retry' :
             _.kebabCase(itemName) : null
         );
 
