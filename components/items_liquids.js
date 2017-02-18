@@ -25,6 +25,10 @@ let becomes = [
         bin: 'recycle',
     },
     {
+        name: 'empty-plastic-bottle-1',
+        bin: 'recycle',
+    },
+    {
         name: 'empty-plastic-bottle-2',
         bin: 'recycle',
     },
@@ -37,24 +41,20 @@ let becomes = [
         bin: 'recycle',
     },
     {
-        name: 'empty-milk-carton',
-        bin: 'recycle',
-    },
-    {
-        name: 'empty-milk-carton',
-        bin: 'recycle',
-    },
-    {
-        name: 'empty-aluminum-can-1',
-        bin: 'recycle',
-    },
-    {
         name: 'juice-box-1',
         bin: 'landfill',
     },
     {
         name: 'juice-box-2',
         bin: 'landfill',
+    },
+    {
+        name: 'empty-milk-carton',
+        bin: 'recycle',
+    },
+    {
+        name: 'empty-milk-carton',
+        bin: 'recycle',
     },
     {
         name: 'empty-milk-carton-1',
@@ -89,7 +89,7 @@ let becomes = [
         bin: 'recycle',
     },
     {
-        name: 'empty-plastic-bottle-2',
+        name: 'empty-orange-juice-2',
         bin: 'recycle',
     },
 ];
