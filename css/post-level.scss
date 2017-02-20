@@ -54,9 +54,22 @@
         }
     }
 
+    .sparkle {
+        @include position(absolute, 340px null null 650px);
+        @include size(150px 150px);
+        transition: opacify .5s;
+        opacity: 0;
+    }
+
     &.STARTED {
         .animated {
             animation-name: bounceInDown;
+        }
+    }
+
+    &.COMPLETE {
+        .sparkle {
+            opacity: 1;
         }
     }
 }
