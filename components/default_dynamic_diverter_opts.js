@@ -4,6 +4,8 @@ import itemsCompost from './items_compost';
 import itemsLandfill from './items_landfill';
 import itemsRecycle from './items_recycle';
 
+let itemsToRemove = 8;
+
 let shuffledItemsCompost = _.shuffle(itemsCompost);
 let shuffledItemsLandfill = _.shuffle(itemsLandfill);
 let shuffledItemsRecycle = _.shuffle(itemsRecycle);
@@ -39,12 +41,13 @@ audioArray = audioArray.concat([
 export default _.defaults({
     gameName: 'dynamic-diverter',
     gameNumber: 4,
-    pointsPerBin: 400,
     scoreToWin: 1200,
+    timeout: 240000,
     dropperAmount: 2,
     getDropperProps() {
         return {
             onNext: function () {
+                itemsToRemove = 8;
                 this.updateScreenData({
                     keys: ['manual-dropper', 'binName'],
                     data: this.state.items[this.firstItemIndex].props.message,
@@ -71,6 +74,8 @@ export default _.defaults({
             onCorrect: function (draggable) {
                 let score = opts.score + opts.pointsPerItem;
 
+                itemsToRemove--;
+
                 draggable.markCorrect();
 
                 this.updateGameData({
@@ -80,7 +85,7 @@ export default _.defaults({
                     }
                 });
 
-                if ((score % opts.pointsPerBin) === 0) {
+                if (!itemsToRemove) {
                     this.updateScreenData({
                         keys: ['manual-dropper', 'next'],
                         data: true,
@@ -137,27 +142,30 @@ export default _.defaults({
     getAudioArray() {
         return audioArray;
     },
-    binItems: [
-        {
-            name: 'recycle',
-            objects: []
-                .concat(shuffledItemsCompost.splice(0, 2))
-                .concat(shuffledItemsLandfill.splice(0, 2))
-                .concat(shuffledItemsRecycle.splice(0, 6)),
-        },
-        {
-            name: 'landfill',
-            objects: []
-                .concat(shuffledItemsCompost.splice(0, 2))
-                .concat(shuffledItemsLandfill.splice(0, 6))
-                .concat(shuffledItemsRecycle.splice(0, 2)),
-        },
-        {
-            name: 'compost',
-            objects: []
-                .concat(shuffledItemsCompost.splice(0, 6))
-                .concat(shuffledItemsLandfill.splice(0, 2))
-                .concat(shuffledItemsRecycle.splice(0, 2)),
-        },
-    ]
+    binItems: [],
+    getBinItems: function () {
+        return [
+            {
+                name: 'recycle',
+                objects: []
+                    .concat(shuffledItemsCompost.splice(0, 4))
+                    .concat(shuffledItemsLandfill.splice(0, 4))
+                    .concat(shuffledItemsRecycle.splice(0, 12)),
+            },
+            {
+                name: 'landfill',
+                objects: []
+                    .concat(shuffledItemsCompost.splice(0, 4))
+                    .concat(shuffledItemsLandfill.splice(0, 12))
+                    .concat(shuffledItemsRecycle.splice(0, 4)),
+            },
+            {
+                name: 'compost',
+                objects: []
+                    .concat(shuffledItemsCompost.splice(0, 12))
+                    .concat(shuffledItemsLandfill.splice(0, 4))
+                    .concat(shuffledItemsRecycle.splice(0, 4)),
+            },
+        ];
+    }
 }, defaultGameOpts);

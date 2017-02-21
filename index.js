@@ -73,11 +73,11 @@ skoash.start(
         screens={[
             iOSScreen,
             TitleScreen,
+            /*
             HiThereScreen,
             KeyIsSortingScreen,
             LightsScreen,
             FiveWaysScreen,
-            /*
             LevelScreen(1.0),
             RecyclingChampion1InfoScreen,
             RecyclingChampion1Screen,
@@ -97,7 +97,6 @@ skoash.start(
             LevelCompleteScreen(1),
             LevelScreen(2.0),
             PricelessPourer1InfoScreen,
-            */
             PricelessPourer1Screen,
             LevelScreen(2.1),
             PricelessPourer2InfoScreen,
@@ -132,7 +131,9 @@ skoash.start(
             LevelCompleteScreen(3),
             LevelScreen(4.0),
             DynamicDiverter1InfoScreen,
+            */
             DynamicDiverter1Screen,
+            /*
             LevelScreen(4.1),
             DynamicDiverter2InfoScreen,
             DynamicDiverter2Screen,
@@ -167,6 +168,7 @@ skoash.start(
             LevelScreen(5.5),
             LevelCompleteScreen(5),
             NowAMemberScreen,
+            */
             LevelCompleteScreen(6),
         ]}
         menus={{

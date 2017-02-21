@@ -4,7 +4,6 @@ import Catchable from 'shared/components/catchable/0.2';
 
 import defaultGameOpts from './default_game_opts';
 import ItemsToSort from './items_to_sort';
-import ItemsLiquid from './items_liquids';
 
 const binNames = [
     'liquids',
@@ -14,7 +13,7 @@ const binNames = [
 ];
 
 let itemsToSort = _.filter(
-    ItemsToSort.concat(ItemsLiquid).concat(ItemsLiquid).concat(ItemsLiquid).concat(ItemsLiquid),
+    ItemsToSort,
     item => _.includes(binNames, item.bin)
 );
 

@@ -8,6 +8,7 @@ let names = [
     'half-full-lemonade-box-1',
     'half-full-lemonade-box-4',
     'half-full-chocolate-milk-carton',
+    'half-full-chocolate-milk-carton',
     'half-full-milk-carton-1',
     'half-full-milk-carton-2',
     'half-full-milk-carton-3',
@@ -47,6 +48,10 @@ let becomes = [
     {
         name: 'juice-box-2',
         bin: 'landfill',
+    },
+    {
+        name: 'empty-milk-carton',
+        bin: 'recycle',
     },
     {
         name: 'empty-milk-carton',
