@@ -14,7 +14,7 @@ const binNames = [
 ];
 
 let itemsToSort = _.filter(
-    ItemsToSort.concat(ItemsLiquid).concat(ItemsLiquid),
+    ItemsToSort.concat(ItemsLiquid).concat(ItemsLiquid).concat(ItemsLiquid).concat(ItemsLiquid),
     item => _.includes(binNames, item.bin)
 );
 
@@ -24,7 +24,7 @@ let getChildren = v => {
     return (
         <skoash.Sprite
             src={`${CMWN.MEDIA.SPRITE}_${_.replace(v.bin, '-', '')}`}
-            frame={v.frame || 1}
+            frame={v.frame || 0}
             static
         />
     );
@@ -172,6 +172,10 @@ export default _.defaults({
                                     dropClass: '',
                                 },
                             }
+                        });
+                        this.updateGameData({
+                            keys: [_.camelCase(opts.gameName), 'levels', opts.level, 'score'],
+                            data: opts.score + opts.pointsPerItem,
                         });
                         DOMNode.removeEventListener('animationend', onAnimationEnd);
                     }
