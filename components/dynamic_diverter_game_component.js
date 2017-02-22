@@ -115,6 +115,7 @@ export default function (props, ref, key, opts = {}) {
                 backgroundAudio={`BKG${opts.gameNumber}`}
                 {...screenProps}
             >
+                <skoash.Image className="hidden" scr={`${CMWN.MEDIA.IMAGE}next-bin.png`} />
                 <skoash.Component
                     className="top-left"
                 >
