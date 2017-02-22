@@ -16,7 +16,7 @@ export default _.defaults({
     itemsToSort,
     getExtraComponents() {
         return [
-            <skoash.Image className="hidden" scr={`${CMWN.MEDIA.IMAGE}pipe01.png`} />,
+            <skoash.Image className="hidden" src={`${CMWN.MEDIA.IMAGE}pipe01.png`} />,
         ];
     },
 }, defaultGameOpts);
