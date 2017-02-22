@@ -193,6 +193,10 @@ export default function (props, ref, key, opts = {}) {
                             type="li"
                         />,
                         <skoash.Component
+                            ref="next"
+                            type="li"
+                        />,
+                        <skoash.Component
                             ref="complete"
                             type="li"
                         />,

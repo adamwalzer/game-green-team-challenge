@@ -87,8 +87,26 @@ export default _.defaults({
 
                 if (!itemsToRemove) {
                     this.updateScreenData({
-                        keys: ['manual-dropper', 'next'],
-                        data: true,
+                        data: {
+                            'manual-dropper': {
+                                next: true,
+                            },
+                            reveal: {
+                                open: 'next',
+                            },
+                        },
+                        callback: () => {
+                            setTimeout(() => {
+                                this.updateScreenData({
+                                    data: {
+                                        reveal: {
+                                            open: null,
+                                            close: true,
+                                        },
+                                    }
+                                });
+                            }, 1000);
+                        }
                     });
                 }
             },

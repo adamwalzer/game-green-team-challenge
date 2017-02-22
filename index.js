@@ -73,6 +73,7 @@ skoash.start(
         screens={[
             iOSScreen,
             TitleScreen,
+            /*
             HiThereScreen,
             KeyIsSortingScreen,
             LightsScreen,
@@ -130,6 +131,7 @@ skoash.start(
             LevelCompleteScreen(3),
             LevelScreen(4.0),
             DynamicDiverter1InfoScreen,
+            */
             DynamicDiverter1Screen,
             LevelScreen(4.1),
             DynamicDiverter2InfoScreen,
