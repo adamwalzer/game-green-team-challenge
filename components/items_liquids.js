@@ -90,10 +90,6 @@ let becomes = [
         bin: 'recycle',
     },
     {
-        name: 'empty-milk-carton-8',
-        bin: 'recycle',
-    },
-    {
         name: 'empty-orange-juice-2',
         bin: 'recycle',
     },

@@ -160,7 +160,9 @@ export default _.defaults({
                         item.props.message = item.props.becomes.bin;
                         item.props['data-message'] = item.props.becomes.bin;
                         items[index] = item;
-                        this.setState({items});
+                        this.setState({items}, () => {
+                            this.afterNext();
+                        });
                         this.updateScreenData({
                             data: {
                                 item: {

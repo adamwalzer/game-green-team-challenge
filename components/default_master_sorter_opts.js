@@ -187,7 +187,9 @@ export default _.defaults({
                     selectedItem.props.message = selectedItem.props.becomes.bin;
                     selectedItem.props['data-message'] = selectedItem.props.becomes.bin;
                     items[index] = item;
-                    this.setState({items});
+                    this.setState({items}, () => {
+                        this.afterNext();
+                    });
 
                     this.updateGameData({
                         keys: [_.camelCase(opts.gameName), 'levels', opts.level, 'score'],
