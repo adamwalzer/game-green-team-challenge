@@ -6,7 +6,7 @@ import itemsRecycle from './items_recycle';
 
 export default []
     .concat(itemsCompost)
-    .concat(itemsFoodShare)
+    .concat(itemsFoodShare).concat(itemsFoodShare).concat(itemsFoodShare)
     .concat(itemsLandfill)
-    .concat(itemsLiquids)
+    .concat(itemsLiquids).concat(itemsLiquids).concat(itemsLiquids).concat(itemsLiquids).concat(itemsLiquids)
     .concat(itemsRecycle);

@@ -10,6 +10,7 @@ const DROPPED = 'DROPPED';
 const TILT = 'TILT';
 const ITEMS = 'items-';
 
+const TRUCK_SRC = CMWN.MEDIA.SPRITE + 'dumptruck.png';
 const BELT_SRC = CMWN.MEDIA.SPRITE + 'level.3.conveyor.belt';
 const CLAW_SRC = CMWN.MEDIA.SPRITE + 'level3robotarm';
 const FUNNEL_SRC = CMWN.MEDIA.SPRITE + 'front.back.funnel';
@@ -46,7 +47,10 @@ const onItemPickUpTransitionEnd = function (itemRef) {
     }
 };
 
-let itemsToSort = _.filter(ItemsToSort, item => _.includes(binNames, item.bin));
+let itemsToSort = _.filter(
+    ItemsToSort,
+    item => _.includes(binNames, item.bin)
+);
 
 let getChildren = v => {
     if (v.children) return v.children;
@@ -54,7 +58,7 @@ let getChildren = v => {
     return (
         <skoash.Sprite
             src={`${CMWN.MEDIA.SPRITE}_${_.replace(v.bin, '-', '')}`}
-            frame={v.frame || 1}
+            frame={v.frame || 0}
             static
         />
     );
@@ -93,11 +97,12 @@ let audioArray = _.map(audioRefs, (v, k) => ({
 
 audioArray = audioArray.concat([
     <skoash.MediaSequence ref="drop" silentOnStart>
-        <skoash.Audio delay={4600} type="sfx" src={`${CMWN.MEDIA.EFFECT}ItemFunnel.mp3`} />
+        <skoash.Audio delay={2600} type="sfx" src={`${CMWN.MEDIA.EFFECT}ItemFunnel.mp3`} />
         <skoash.Audio type="sfx" src={`${CMWN.MEDIA.EFFECT}TruckDump.mp3`} />
     </skoash.MediaSequence>,
     <skoash.Audio ref="correct" type="sfx" src={`${CMWN.MEDIA.EFFECT}ConveyorBelt.mp3`} />,
     <skoash.Audio ref="resort" type="sfx" src={`${CMWN.MEDIA.EFFECT}ResortWarning.mp3`} />,
+    <skoash.Audio ref="retry" type="sfx" src={`${CMWN.MEDIA.EFFECT}level-fail.mp3`} />,
     <skoash.Audio ref="pickUp" type="sfx" src={`${CMWN.MEDIA.EFFECT}ItemFlip.mp3`} />,
     <skoash.Audio ref="pour" type="sfx" src={`${CMWN.MEDIA.EFFECT}LiquidPour.mp3`} />,
     <skoash.Audio ref="timer" type="sfx" src={`${CMWN.MEDIA.EFFECT}SecondTimer.mp3`} />,
@@ -302,6 +307,10 @@ export default _.defaults({
             <skoash.Component
                 className="extras"
             >
+                <skoash.Image
+                    className="hidden"
+                    src={TRUCK_SRC}
+                />
                 <skoash.Sprite
                     className="claw"
                     src={CLAW_SRC}
@@ -309,7 +318,7 @@ export default _.defaults({
                     loop={false}
                     animate={opts.moveClaw}
                     duration={[
-                        200, 200, 200, 500, 100, 3000, 200, 200, 200, 200, 200, 200
+                        200, 200, 200, 500, 100, 1000, 200, 200, 200, 200, 200, 200
                     ]}
                     onComplete={function () {
                         this.setState({frame: this.props.frame});

@@ -67,10 +67,15 @@ $button-scale: .7;
 
     .selectable {
         > * {
-            @include bin-button;
+            animation: button-flash 1s infinite steps(1);
 
+            &:hover,
             &.HIGHLIGHTED {
                 @include bin-button(2);
+                animation: none;
+            }
+
+            &.HIGHLIGHTED {
                 pointer-events: none;
             }
         }
@@ -112,6 +117,7 @@ $button-scale: .7;
         .close-reveal {
             right: 215px;
             bottom: 75px;
+            transform: scaleZ(1);
         }
     }
 }

@@ -1,4 +1,16 @@
 import classNames from 'classnames';
+import 'shared/effects/index';
+
+const SPARKEL = 'sparkle';
+
+let onStart = function () {
+    this.effect = window.CMWN.makeEffect('sparkle', ReactDOM.findDOMNode(this));
+};
+
+let onStop = function () {
+    _.invoke(this.effect, 'destroy');
+    delete this.effect;
+};
 
 let flipKeys = [
     'recycling-champion',
@@ -85,10 +97,15 @@ export default function (levelNumber) {
                         src={`${CMWN.MEDIA.EFFECT}FlipDropBounce.mp3`}
                     />
                 </skoash.MediaSequence>
-                <div className="frame">
+                <div className="frame" >
                     {getLevelHeader(levelNumberWord)}
                     {listLevels(levelNumber)}
                 </div>
+                <skoash.Component
+                    className={SPARKEL}
+                    onStart={onStart}
+                    onStop={onStop}
+                />
             </skoash.Screen>
         );
     };

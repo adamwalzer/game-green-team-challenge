@@ -12,7 +12,10 @@ const binNames = [
     'compost',
 ];
 
-let itemsToSort = _.filter(ItemsToSort, item => _.includes(binNames, item.bin));
+let itemsToSort = _.filter(
+    ItemsToSort,
+    item => _.includes(binNames, item.bin)
+);
 
 let getChildren = v => {
     if (v.children) return v.children;
@@ -20,7 +23,7 @@ let getChildren = v => {
     return (
         <skoash.Sprite
             src={`${CMWN.MEDIA.SPRITE}_${_.replace(v.bin, '-', '')}`}
-            frame={v.frame || 1}
+            frame={v.frame || 0}
             static
         />
     );
@@ -61,6 +64,7 @@ audioArray = audioArray.concat([
     <skoash.Audio ref="drop" type="sfx" src={`${CMWN.MEDIA.EFFECT}ClickRecButton.mp3`} />,
     <skoash.Audio ref="correct" type="sfx" src={`${CMWN.MEDIA.EFFECT}ConveyorBelt.mp3`} />,
     <skoash.Audio ref="resort" type="sfx" src={`${CMWN.MEDIA.EFFECT}ResortWarning.mp3`} />,
+    <skoash.Audio ref="retry" type="sfx" src={`${CMWN.MEDIA.EFFECT}level-fail.mp3`} />,
     <skoash.Audio ref="pickUp" type="sfx" src={`${CMWN.MEDIA.EFFECT}ItemFlip.mp3`} />,
     <skoash.Audio ref="pour" type="sfx" src={`${CMWN.MEDIA.EFFECT}LiquidPour.mp3`} />,
     <skoash.Audio ref="timer" type="sfx" src={`${CMWN.MEDIA.EFFECT}SecondTimer.mp3`} />,
@@ -167,6 +171,10 @@ export default _.defaults({
                                     dropClass: '',
                                 },
                             }
+                        });
+                        this.updateGameData({
+                            keys: [_.camelCase(opts.gameName), 'levels', opts.level, 'score'],
+                            data: opts.score + opts.pointsPerItem,
                         });
                         DOMNode.removeEventListener('animationend', onAnimationEnd);
                     }

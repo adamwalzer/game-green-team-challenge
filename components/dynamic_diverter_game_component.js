@@ -1,3 +1,5 @@
+import classNames from 'classnames';
+
 import ManualDropper from 'shared/components/manual_dropper/0.1';
 import Carousel from 'shared/components/carousel/0.1';
 import Dropzone from 'shared/components/dropzone/0.4';
@@ -11,7 +13,7 @@ let getChildren = v => {
     return (
         <skoash.Sprite
             src={`${CMWN.MEDIA.SPRITE}_${_.replace(v.bin, '-', '')}`}
-            frame={v.frame || 1}
+            frame={v.frame || 0}
             static
         />
     );
@@ -65,6 +67,7 @@ export default function (props, ref, key, opts = {}) {
         opts.playAudio = (
             play ? play :
             revealOpen === 'resort' ? 'resort' :
+            revealOpen === 'retry' ? 'retry' :
             _.kebabCase(itemName) : null
         );
 
@@ -112,6 +115,7 @@ export default function (props, ref, key, opts = {}) {
                 backgroundAudio={`BKG${opts.gameNumber}`}
                 {...screenProps}
             >
+                <skoash.Image className="hidden" src={`${CMWN.MEDIA.IMAGE}next-bin.png`} />
                 <skoash.Component
                     className="top-left"
                 >
@@ -123,6 +127,9 @@ export default function (props, ref, key, opts = {}) {
                         {PTS}
                     </skoash.Score>
                     <skoash.Timer
+                        className={classNames({
+                            final: _.get(props, 'data.timer.final')
+                        })}
                         countDown
                         format="mm:ss"
                         timeout={opts.timeout}
@@ -184,6 +191,10 @@ export default function (props, ref, key, opts = {}) {
                         />,
                         <skoash.Component
                             ref="retry"
+                            type="li"
+                        />,
+                        <skoash.Component
+                            ref="next"
                             type="li"
                         />,
                         <skoash.Component

@@ -43,6 +43,10 @@ export default function (levelNumber) {
                 <skoash.MediaSequence
                     children={[
                         <skoash.Audio
+                            type="sfx"
+                            src={`${CMWN.MEDIA.EFFECT}rolling-dumpser.mp3`}
+                        />,
+                        <skoash.Audio
                             playTarget="appear"
                             type="sfx"
                             src={`${CMWN.MEDIA.EFFECT}LevelAppear.mp3`}

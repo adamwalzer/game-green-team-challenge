@@ -70,6 +70,7 @@ skoash.start(
     <skoash.Game
         config={config}
         loader={<Loader />}
+        screenBeforeAndAfter={2}
         screens={[
             iOSScreen,
             TitleScreen,
@@ -188,6 +189,11 @@ skoash.start(
             <skoash.Image className="hidden" src={`${CMWN.MEDIA.FRAME}frame.02.png`} />,
             <skoash.Image className="hidden" src={`${CMWN.MEDIA.FRAME}transition.frame.png`} />,
             <skoash.Image className="hidden" src={`${CMWN.MEDIA.SPRITE}sprite.mainnav.png`} />,
+            <skoash.Image className="hidden" src={`${CMWN.MEDIA.IMAGE}Img.anotherChance.png`} />,
+            <skoash.Image className="hidden" src={`${CMWN.MEDIA.IMAGE}img.resort.png`} />,
+            <skoash.Image className="hidden" src={`${CMWN.MEDIA.IMAGE}vertical.pipe.png`} />,
+            <skoash.Image className="hidden" src={`${CMWN.MEDIA.IMAGE}pipe.meter.png`} />,
+            <skoash.Image className="hidden" src={`${CMWN.MEDIA.IMAGE}container.png`} />,
             <skoash.Image className="hidden" src={`${CMWN.MEDIA.IMAGE}titlescrnbg.jpg`} />,
             <skoash.Image className="hidden" src={`${CMWN.MEDIA.IMAGE}background.01.jpg`} />,
             <skoash.Image className="hidden" src={`${CMWN.MEDIA.IMAGE}background.02.jpg`} />,

@@ -1,5 +1,16 @@
 import Catchable from 'shared/components/catchable/0.2';
-import ItemsToSort from './items_to_sort';
+import itemsCompost from './items_compost';
+import itemsFoodShare from './items_food_share';
+import itemsLandfill from './items_landfill';
+import itemsLiquids from './items_liquids';
+import itemsRecycle from './items_recycle';
+
+let itemsToSort = []
+    .concat(itemsCompost)
+    .concat(itemsFoodShare)
+    .concat(itemsLandfill)
+    .concat(itemsLiquids)
+    .concat(itemsRecycle);
 
 let onSelect = function (key) {
     let ref = this.refs[key];
@@ -37,14 +48,14 @@ let getChildren = v => {
     return (
         <skoash.Sprite
             src={`${CMWN.MEDIA.SPRITE}_${_.replace(v.bin, '-', '')}`}
-            frame={v.frame || 1}
+            frame={v.frame || 0}
             static
         />
     );
 };
 
 let mapItems = function (itemNames) {
-    let items = _.filter(ItemsToSort, item => _.includes(itemNames, item.name));
+    let items = _.filter(itemsToSort, item => _.includes(itemNames, item.name));
 
     return _.map(items, item =>
         <Catchable

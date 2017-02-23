@@ -21,8 +21,8 @@
 
     .dropzones {
         > div {
-            @include position(absolute, 150px null null 120px);
-            @include size(150px 100px);
+            @include position(absolute, 170px null null 120px);
+            @include size(135px 90px);
             z-index: 2;
 
             &::before {
