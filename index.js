@@ -70,7 +70,7 @@ skoash.start(
     <skoash.Game
         config={config}
         loader={<Loader />}
-        screenBeforeAndAfter={3}
+        screenBeforeAndAfter={2}
         screens={[
             iOSScreen,
             TitleScreen,

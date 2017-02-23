@@ -162,6 +162,18 @@ export default _.defaults({
     },
     binItems: [],
     getBinItems: function () {
+        if (shuffledItemsCompost.length < 20) {
+            shuffledItemsCompost = shuffledItemsCompost.concat(_.shuffle(itemsCompost));
+        }
+
+        if (shuffledItemsLandfill.length < 20) {
+            shuffledItemsLandfill = shuffledItemsLandfill.concat(_.shuffle(itemsLandfill));
+        }
+
+        if (shuffledItemsRecycle.length < 20) {
+            shuffledItemsRecycle = shuffledItemsRecycle.concat(_.shuffle(itemsRecycle));
+        }
+
         return [
             {
                 name: 'recycle',

@@ -48,14 +48,14 @@ export default function (props, ref, key, opts = {}) {
         let itemTop = _.get(props, 'data.item.top', 0) / scale;
         let itemLeft = _.get(props, 'data.item.left', 0) / scale || 'auto';
         let caught = _.get(props, 'data.catcher.caught', '');
-        let revealOpen = _.get(props, 'data.reveal.open', false);
-        let revealClose = _.get(props, 'data.reveal.close', false);
         let play = _.get(props, 'data.play', null);
 
         let audioArray = opts.getAudioArray();
 
         if (itemRef) catchableRefs = [itemRef];
 
+        opts.revealOpen = _.get(props, 'data.reveal.open', false);
+        opts.revealClose = _.get(props, 'data.reveal.close', false);
         opts.next = _.get(props, 'data.manual-dropper.next', false);
         opts.itemRef = itemRef;
         opts.itemName = _.get(props, 'data.item.name', '');
@@ -77,8 +77,8 @@ export default function (props, ref, key, opts = {}) {
             opts.next ? 'next' :
             opts.pour ? 'pour' :
             opts.next ? 'correct' :
-            revealOpen === 'resort' ? 'resort' :
-            revealOpen === 'retry' ? 'retry' :
+            opts.revealOpen === 'resort' ? 'resort' :
+            opts.revealOpen === 'retry' ? 'retry' :
             opts.itemNew ? _.kebabCase(opts.itemName) :
             dropClass === 'TRAY-STACKING' && _.includes(opts.itemName, 'tray') ? 'tray' :
             opts.itemName ? 'select' : null
@@ -122,8 +122,8 @@ export default function (props, ref, key, opts = {}) {
                         format="mm:ss"
                         timeout={opts.timeout}
                         complete={gameComplete}
-                        pause={revealOpen}
-                        resume={!revealOpen}
+                        pause={opts.revealOpen}
+                        resume={!opts.revealOpen}
                         restart={start}
                         {...timerProps}
                     />
@@ -200,8 +200,8 @@ export default function (props, ref, key, opts = {}) {
                 {extraComponents}
                 <skoash.Reveal
                     openTarget="reveal"
-                    openReveal={revealOpen}
-                    closeReveal={revealClose}
+                    openReveal={opts.revealOpen}
+                    closeReveal={opts.revealClose}
                     checkComplete={false}
                     complete={true}
                     {...revealProps}
