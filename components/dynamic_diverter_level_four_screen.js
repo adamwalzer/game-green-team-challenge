@@ -6,7 +6,7 @@ let binItems = defaultOpts.getBinItems();
 export default function (props, ref, key) {
     return DynamicDiverterGameComponent(props, ref, key, _.defaults({
         level: 4,
-        scoreToWin: 250,
+        scoreToWin: 950,
         binItems,
     }, defaultOpts));
 }
