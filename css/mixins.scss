@@ -46,7 +46,7 @@
 }
 
 @mixin level-flips($row, $class: frame, $scale: 1.8) {
-    $flips: 2 4 5 3 6 1;
+    $flips: 2 4 5 6 3 1;
     @for $i from 1 through length($flips) {
         &[id*=-level-#{$i}] {
             .#{$class}::after {
