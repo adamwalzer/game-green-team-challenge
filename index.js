@@ -205,7 +205,12 @@ skoash.start(
             <skoash.Image className="hidden" src={`${CMWN.MEDIA.IMAGE}background.trash.compost.jpg`} />,
             <skoash.Image className="hidden" src={`${CMWN.MEDIA.IMAGE}quit.background.jpg`} />,
             <skoash.Audio type="sfx" ref="button" src={`${CMWN.MEDIA.EFFECT}ButtonClick.mp3`} />,
-            <skoash.Audio type="sfx" ref="screen-complete" src={`${MEDIA.EFFECT}NextAppear.mp3`} />,
+            <skoash.Audio
+                type="sfx"
+                ref="screen-complete"
+                src={`${MEDIA.EFFECT}NextAppear.mp3`}
+                volume={3}
+            />,
             <skoash.Audio ref="BKG0" type="background" src={`${CMWN.MEDIA.EFFECT}titlescreen.mp3`} loop />,
             <skoash.Audio ref="BKG1" type="background" src={`${CMWN.MEDIA.EFFECT}BKG1.mp3`} loop />,
             <skoash.Audio ref="BKG2" type="background" src={`${CMWN.MEDIA.EFFECT}BKG2.mp3`} loop />,
