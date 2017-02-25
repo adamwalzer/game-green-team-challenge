@@ -228,17 +228,19 @@ export default _.defaults({
 
         return (
             <skoash.Component>
-                <skoash.Sprite
-                    className="belt"
-                    src={`${CMWN.MEDIA.SPRITE}level.1.conveyor.belt`}
-                    animate={opts.next}
-                    loop={false}
-                    duration={250}
-                    frame={0}
-                    onComplete={function () {
-                        this.setState({frame: this.props.frame});
-                    }}
-                />
+                {skoash.mixins.SpriteAnimation(opts.props, {
+                    className: 'belt',
+                    src: `${CMWN.MEDIA.SPRITE}level.1.conveyor.belt`,
+                    duration: 250,
+                    animate: opts.next,
+                    AnimationProps: {
+                        loop: false,
+                        frame: 0,
+                        onComplete: function () {
+                            this.setState({frame: this.props.frame});
+                        },
+                    },
+                })}
                 <skoash.Sprite
                     className={classNames('pour', {show: opts.pour && color === 'chocolate'})}
                     src={`${CMWN.MEDIA.SPRITE}level.2.chocolate.milk`}

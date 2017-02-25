@@ -174,23 +174,23 @@ skoash.start(
         assets={[
             <skoash.SpriteCSS
                 src={`${CMWN.MEDIA.SPRITE}_recycle`}
-                spriteSelector=".recycle-item"
+                spriteClass="recycle-item"
             />,
             <skoash.SpriteCSS
                 src={`${CMWN.MEDIA.SPRITE}_liquids`}
-                spriteSelector=".liquids-item"
+                spriteClass="liquids-item"
             />,
             <skoash.SpriteCSS
                 src={`${CMWN.MEDIA.SPRITE}_landfill`}
-                spriteSelector=".landfill-item"
+                spriteClass="landfill-item"
             />,
             <skoash.SpriteCSS
                 src={`${CMWN.MEDIA.SPRITE}_foodshare`}
-                spriteSelector=".food-share-item"
+                spriteClass="food-share-item"
             />,
             <skoash.SpriteCSS
                 src={`${CMWN.MEDIA.SPRITE}_compost`}
-                spriteSelector=".compost-item"
+                spriteClass="compost-item"
             />,
             <skoash.Image className="hidden" src={`${CMWN.MEDIA.SPRITE}_recycle.png`} />,
             <skoash.Image className="hidden" src={`${CMWN.MEDIA.SPRITE}_liquids.png`} />,

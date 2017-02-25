@@ -54,6 +54,7 @@ export default function (props, ref, key, opts = {}) {
 
         if (itemRef) catchableRefs = [itemRef];
 
+        opts.props = props;
         opts.revealOpen = _.get(props, 'data.reveal.open', false);
         opts.revealClose = _.get(props, 'data.reveal.close', false);
         opts.next = _.get(props, 'data.manual-dropper.next', false);
