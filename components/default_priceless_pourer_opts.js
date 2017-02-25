@@ -21,11 +21,7 @@ let getChildren = v => {
     if (v.children) return v.children;
 
     return (
-        <skoash.Sprite
-            src={`${CMWN.MEDIA.SPRITE}_${_.replace(v.bin, '-', '')}`}
-            frame={v.frame || 0}
-            static
-        />
+        <div className={`sprite ${v.bin}-item frame-${v.frame}`}/>
     );
 };
 

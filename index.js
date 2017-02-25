@@ -172,11 +172,26 @@ skoash.start(
             quit: QuitScreen,
         }}
         assets={[
-            <skoash.JSON src={`${CMWN.MEDIA.SPRITE}_recycle.json`} />,
-            <skoash.JSON src={`${CMWN.MEDIA.SPRITE}_liquids.json`} />,
-            <skoash.JSON src={`${CMWN.MEDIA.SPRITE}_landfill.json`} />,
-            <skoash.JSON src={`${CMWN.MEDIA.SPRITE}_foodshare.json`} />,
-            <skoash.JSON src={`${CMWN.MEDIA.SPRITE}_compost.json`} />,
+            <skoash.SpriteCSS
+                src={`${CMWN.MEDIA.SPRITE}_recycle`}
+                spriteSelector=".recycle-item"
+            />,
+            <skoash.SpriteCSS
+                src={`${CMWN.MEDIA.SPRITE}_liquids`}
+                spriteSelector=".liquids-item"
+            />,
+            <skoash.SpriteCSS
+                src={`${CMWN.MEDIA.SPRITE}_landfill`}
+                spriteSelector=".landfill-item"
+            />,
+            <skoash.SpriteCSS
+                src={`${CMWN.MEDIA.SPRITE}_foodshare`}
+                spriteSelector=".food-share-item"
+            />,
+            <skoash.SpriteCSS
+                src={`${CMWN.MEDIA.SPRITE}_compost`}
+                spriteSelector=".compost-item"
+            />,
             <skoash.Image className="hidden" src={`${CMWN.MEDIA.SPRITE}_recycle.png`} />,
             <skoash.Image className="hidden" src={`${CMWN.MEDIA.SPRITE}_liquids.png`} />,
             <skoash.Image className="hidden" src={`${CMWN.MEDIA.SPRITE}_landfill.png`} />,

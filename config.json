@@ -1,7 +1,7 @@
 {
     "id": "green-team-challenge",
     "version": 1,
-    "skoash": "1.1.4",
+    "skoash": "1.1.5",
     "head_injection": "",
     "dimensions": {
         "width": 960,
