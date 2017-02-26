@@ -74,7 +74,6 @@ skoash.start(
         screens={[
             iOSScreen,
             TitleScreen,
-            /*
             HiThereScreen,
             KeyIsSortingScreen,
             LightsScreen,
@@ -115,7 +114,6 @@ skoash.start(
             LevelCompleteScreen(2),
             LevelScreen(3.0),
             FantasticFoodSharer1InfoScreen,
-            */
             FantasticFoodSharer1Screen,
             LevelScreen(3.1),
             FantasticFoodSharer2InfoScreen,

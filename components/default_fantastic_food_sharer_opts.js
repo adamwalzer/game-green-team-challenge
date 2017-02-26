@@ -137,14 +137,10 @@ export default _.defaults({
                         key: 'truckClassName',
                         data: TILT,
                     });
-                    console.log(0);
                     if (DOMNode !== e.target) return;
-                    if (!this.props.dropClass) return;
-                    console.log(1);
 
-                    if (this.props.dropClass === DROPPED && itemRef.props.message === 'liquids') {
+                    if (itemRef.props.message === 'liquids') {
                         onAnimationEnd = () => {
-                            console.log('onAnimationEnd');
                             this.pickUp(_.defaults({
                                 onPickUp: function () {
                                     let items = this.state.items;
@@ -180,11 +176,9 @@ export default _.defaults({
                             }, this.props));
                         };
 
-                        console.log('there');
-                        if (!itemRef.state.className || !_.incldues(itemRef.state.className, 'POUR')) {
+                        if (!itemRef.state.className || !_.includes(itemRef.state.className, 'POUR')) {
                             DOMNode.addEventListener('animationend', onAnimationEnd);
                             itemRef.addClassName('POUR');
-                            console.log('here');
                             this.updateScreenData({
                                 key: ['item', 'pour'],
                                 data: true,
@@ -192,12 +186,12 @@ export default _.defaults({
                         }
                     }
 
+                    if (!this.props.dropClass) return;
                     if (this.props.dropClass === DROPPED) return;
 
                     if (!_.includes(_.kebabCase(this.props.dropClass), itemRef.props.message)) {
                         let hits = opts.hits + 1;
 
-                        console.log(3);
                         this.updateGameData({
                             keys: [_.camelCase(opts.gameName), 'levels', opts.level],
                             data: {
@@ -243,7 +237,6 @@ export default _.defaults({
                         return;
                     }
 
-                    console.log(4);
                     if (this.props.dropClass !== 'LIQUIDS') {
                         this.updateGameData({
                             keys: [_.camelCase(opts.gameName), 'levels', opts.level, 'score'],
@@ -256,7 +249,6 @@ export default _.defaults({
                         return;
                     }
 
-                    console.log(5);
                 }
             },
             onPickUp: function (itemRef) {
