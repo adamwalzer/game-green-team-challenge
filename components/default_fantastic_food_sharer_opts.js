@@ -130,7 +130,7 @@ export default _.defaults({
             onTransitionEnd: function (e) {
                 if (e.propertyName === 'top' && _.includes(e.target.className, DROPPED)) {
                     let itemRef = this.refs[ITEMS + this.firstItemIndex];
-                    let DOMNode;
+                    let DOMNode = ReactDOM.findDOMNode(itemRef);
                     let onAnimationEnd;
 
                     this.updateScreenData({
@@ -138,9 +138,10 @@ export default _.defaults({
                         data: TILT,
                     });
 
-                    if (opts.selectableMessage !== 'liquids') return;
+                    if (DOMNode !== e.target) return;
+                    if (!this.props.dropClass || this.props.dropClass === DROPPED) return;
 
-                    if (itemRef.props.message !== 'liquids') {
+                    if (!_.includes(_.kebabCase(this.props.dropClass), itemRef.props.message)) {
                         let hits = opts.hits + 1;
 
                         this.updateGameData({
@@ -188,9 +189,17 @@ export default _.defaults({
                         return;
                     }
 
-                    DOMNode = ReactDOM.findDOMNode(itemRef);
-
-                    if (DOMNode !== e.target) return;
+                    if (this.props.dropClass !== 'LIQUIDS') {
+                        this.updateGameData({
+                            keys: [_.camelCase(opts.gameName), 'levels', opts.level, 'score'],
+                            data: opts.score + opts.pointsPerItem,
+                        });
+                        this.updateScreenData({
+                            keys: ['manual-dropper', 'next'],
+                            data: true,
+                        });
+                        return;
+                    }
 
                     onAnimationEnd = () => {
                         this.pickUp(_.defaults({

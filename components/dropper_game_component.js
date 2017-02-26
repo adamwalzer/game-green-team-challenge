@@ -1,6 +1,5 @@
 import classNames from 'classnames';
 
-import Catcher from 'shared/components/catcher/0.4';
 import ManualDropper from 'shared/components/manual_dropper/0.1';
 
 const PTS = 'pts';
@@ -22,7 +21,6 @@ export default function (props, ref, key, opts = {}) {
         let revealProps;
         let selectableProps;
         let dropperProps;
-        let catcherProps;
         let lifeProps;
         let extraComponents;
 
@@ -42,7 +40,6 @@ export default function (props, ref, key, opts = {}) {
         let pickUp = _.get(props, 'data.manual-dropper.pickUp', false);
         let onPickUp = _.get(props, 'data.manual-dropper.onPickUp');
         let selectItem = _.get(props, 'data.manual-dropper.selectItem');
-        let catchableRefs = _.get(props, 'data.manual-dropper.refs', []);
         let itemRef = _.get(props, 'data.item.ref');
         let removeItemClassName = _.get(props, 'data.item.removeClassName');
         let itemTop = _.get(props, 'data.item.top', 0) / scale;
@@ -51,8 +48,6 @@ export default function (props, ref, key, opts = {}) {
         let play = _.get(props, 'data.play', null);
 
         let audioArray = opts.getAudioArray();
-
-        if (itemRef) catchableRefs = [itemRef];
 
         opts.props = props;
         opts.revealOpen = _.get(props, 'data.reveal.open', false);
@@ -90,7 +85,6 @@ export default function (props, ref, key, opts = {}) {
         revealProps = opts.getRevealProps(opts);
         selectableProps = opts.getSelectableProps(opts);
         dropperProps = opts.getDropperProps(opts);
-        catcherProps = opts.getCatcherProps(opts);
         lifeProps = opts.getLifeProps(opts);
         extraComponents = opts.getExtraComponents(opts);
 
@@ -182,16 +176,11 @@ export default function (props, ref, key, opts = {}) {
                         DISABLED: !opts.itemName
                     })}
                 >
-                    <Catcher
+                    <skoash.Component
+                        className="catch"
                         completeOnStart
                         checkComplete={false}
-                        start={start}
-                        bucket={binComponents}
-                        catchableRefs={catchableRefs}
-                        pause={caught || !start}
-                        resume={drop || itemRef}
-                        collideFraction={opts.collideFraction}
-                        {...catcherProps}
+                        children={binComponents}
                     />
                     <skoash.Selectable
                         {...selectableProps}
