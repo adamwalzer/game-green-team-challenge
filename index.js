@@ -81,9 +81,7 @@ skoash.start(
             FiveWaysScreen,
             LevelScreen(1.0),
             RecyclingChampion1InfoScreen,
-            */
             RecyclingChampion1Screen,
-            /*
             LevelScreen(1.1),
             RecyclingChampion2InfoScreen,
             RecyclingChampion2Screen,
@@ -100,9 +98,7 @@ skoash.start(
             LevelCompleteScreen(1),
             LevelScreen(2.0),
             PricelessPourer1InfoScreen,
-            */
             PricelessPourer1Screen,
-            /*
             LevelScreen(2.1),
             PricelessPourer2InfoScreen,
             PricelessPourer2Screen,

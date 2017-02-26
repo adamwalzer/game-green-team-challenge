@@ -137,13 +137,67 @@ export default _.defaults({
                         key: 'truckClassName',
                         data: TILT,
                     });
-
+                    console.log(0);
                     if (DOMNode !== e.target) return;
-                    if (!this.props.dropClass || this.props.dropClass === DROPPED) return;
+                    if (!this.props.dropClass) return;
+                    console.log(1);
+
+                    if (this.props.dropClass === DROPPED && itemRef.props.message === 'liquids') {
+                        onAnimationEnd = () => {
+                            console.log('onAnimationEnd');
+                            this.pickUp(_.defaults({
+                                onPickUp: function () {
+                                    let items = this.state.items;
+                                    let index = this.firstItemIndex;
+                                    let item = items[index];
+                                    item.props.className = item.props.becomes.name;
+                                    item.props.message = item.props.becomes.bin;
+                                    item.props['data-message'] = item.props.becomes.bin;
+                                    items[index] = item;
+                                    this.setState({items}, () => {
+                                        this.getFirstItem().removeAllClassNames();
+                                        this.updateScreenData({
+                                            keys: [this.props.refsTarget, 'refs'],
+                                            data: _.filter(this.refs, (v, k) => !k.indexOf(ITEMS)),
+                                        });
+                                    });
+                                    this.updateScreenData({
+                                        data: {
+                                            item: {
+                                                name: _.startCase(
+                                                    _.replace(item.props.becomes.name, /\d+/g, '')
+                                                ),
+                                                pour: false,
+                                            },
+                                            'manual-dropper': {
+                                                dropClass: '',
+                                            },
+                                            truckClassName: '',
+                                        }
+                                    });
+                                    DOMNode.removeEventListener('animationend', onAnimationEnd);
+                                }
+                            }, this.props));
+                        };
+
+                        console.log('there');
+                        if (!itemRef.state.className || !_.incldues(itemRef.state.className, 'POUR')) {
+                            DOMNode.addEventListener('animationend', onAnimationEnd);
+                            itemRef.addClassName('POUR');
+                            console.log('here');
+                            this.updateScreenData({
+                                key: ['item', 'pour'],
+                                data: true,
+                            });
+                        }
+                    }
+
+                    if (this.props.dropClass === DROPPED) return;
 
                     if (!_.includes(_.kebabCase(this.props.dropClass), itemRef.props.message)) {
                         let hits = opts.hits + 1;
 
+                        console.log(3);
                         this.updateGameData({
                             keys: [_.camelCase(opts.gameName), 'levels', opts.level],
                             data: {
@@ -189,6 +243,7 @@ export default _.defaults({
                         return;
                     }
 
+                    console.log(4);
                     if (this.props.dropClass !== 'LIQUIDS') {
                         this.updateGameData({
                             keys: [_.camelCase(opts.gameName), 'levels', opts.level, 'score'],
@@ -201,50 +256,7 @@ export default _.defaults({
                         return;
                     }
 
-                    onAnimationEnd = () => {
-                        this.pickUp(_.defaults({
-                            onPickUp: function () {
-                                let items = this.state.items;
-                                let index = this.firstItemIndex;
-                                let item = items[index];
-                                item.props.className = item.props.becomes.name;
-                                item.props.message = item.props.becomes.bin;
-                                item.props['data-message'] = item.props.becomes.bin;
-                                items[index] = item;
-                                this.setState({items}, () => {
-                                    this.getFirstItem().removeAllClassNames();
-                                    this.updateScreenData({
-                                        keys: [this.props.refsTarget, 'refs'],
-                                        data: _.filter(this.refs, (v, k) => !k.indexOf(ITEMS)),
-                                    });
-                                });
-                                this.updateScreenData({
-                                    data: {
-                                        item: {
-                                            name: _.startCase(
-                                                _.replace(item.props.becomes.name, /\d+/g, '')
-                                            ),
-                                            pour: false,
-                                        },
-                                        'manual-dropper': {
-                                            dropClass: '',
-                                        },
-                                        truckClassName: '',
-                                    }
-                                });
-                                DOMNode.removeEventListener('animationend', onAnimationEnd);
-                            }
-                        }, this.props));
-                    };
-
-                    if (!itemRef.state.className || itemRef.state.className.indexOf('POUR') === -1) {
-                        DOMNode.addEventListener('animationend', onAnimationEnd);
-                        itemRef.addClassName('POUR');
-                        this.updateScreenData({
-                            key: ['item', 'pour'],
-                            data: true,
-                        });
-                    }
+                    console.log(5);
                 }
             },
             onPickUp: function (itemRef) {
