@@ -107,19 +107,14 @@ export default _.defaults({
                 let tray = this.getFirstItem();
                 let itemIndex = _.indexOf(tray.refs['children-0'].state.classes, 'SELECTED');
                 let itemRef = !opts.itemRef ? tray : tray.refs['children-0'].refs[itemIndex];
-                let DOMNode;
+                let DOMNode = ReactDOM.findDOMNode(itemRef);
                 let onAnimationEnd;
+                if (DOMNode !== e.target) return;
+                if (!itemRef.state.className) return;
 
-                if (e.propertyName !== 'top' ||
-                    (
-                        !_.includes(opts.itemClassName, 'LIQUIDS') &&
-                        !_.includes(this.props.dropClass, 'LIQUIDS')
-                    )
-                ) {
-                    return;
-                }
+                if (e.propertyName !== 'top') return;
 
-                if (!opts.itemRef) {
+                if (opts.itemClassName && !opts.itemRef) {
                     this.pickUp();
                     this.updateScreenData({
                         key: 'manual-dropper',
@@ -130,7 +125,14 @@ export default _.defaults({
                     });
                 }
 
-                if (itemRef.props.message !== 'liquids') {
+                if ((
+                        !opts.itemClassName &&
+                        !_.includes(_.kebabCase(this.props.dropClass), itemRef.props.message)
+                    ) ||
+                    (
+                        opts.itemClassName &&
+                        !_.includes(_.kebabCase(opts.itemClassName), itemRef.props.message)
+                    )) {
                     let hits = opts.hits + 1;
 
                     this.updateGameData({
@@ -173,9 +175,46 @@ export default _.defaults({
                     return;
                 }
 
-                DOMNode = ReactDOM.findDOMNode(itemRef);
+                if (opts.itemClassName !== 'LIQUIDS' && this.props.dropClass !== 'LIQUIDS') {
+                    let amount = opts.itemAmount - 1;
 
-                if (DOMNode !== e.target) return;
+                    this.updateGameData({
+                        keys: [_.camelCase(opts.gameName), 'levels', opts.level, 'score'],
+                        data: opts.score + opts.pointsPerItem,
+                    });
+
+                    this.updateScreenData({
+                        key: 'item',
+                        data: {
+                            className: 'CAUGHT',
+                            amount,
+                        },
+                        callback: () => {
+                            this.updateScreenData({
+                                key: 'item',
+                                data: {
+                                    name: null,
+                                    ref: null,
+                                    className: null,
+                                },
+                                callback: () => {
+                                    if (!amount) {
+                                        this.updateScreenData({
+                                            key: 'manual-dropper',
+                                            data: {
+                                                selectItem: true,
+                                            },
+                                        });
+                                    }
+                                }
+                            });
+                        }
+                    });
+
+                    if (!opts.itemClassName) this.next();
+
+                    return;
+                }
 
                 onAnimationEnd = () => {
                     let items = this.state.items;
@@ -262,7 +301,13 @@ export default _.defaults({
                     let tray = this.getFirstItem();
 
                     if (tray.props.message === 'home') {
-                        tray.addClassName('HOME');
+                        this.updateScreenData({
+                            key: 'manual-dropper',
+                            data: {
+                                drop: true,
+                                dropClass: 'HOME',
+                            },
+                        });
                     } else {
                         let rect = ReactDOM.findDOMNode(tray).getBoundingClientRect();
                         let name = _.startCase(_.replace(tray.props.className, /\d+/g, ''));
@@ -293,107 +338,6 @@ export default _.defaults({
                         },
                     }
                 });
-            },
-        };
-    },
-    getCatcherProps(opts) {
-        return {
-            onCorrect: function (bucketRef) {
-                let amount = opts.itemAmount - 1;
-
-                this.updateGameData({
-                    keys: [_.camelCase(opts.gameName), 'levels', opts.level, 'score'],
-                    data: opts.score + opts.pointsPerItem,
-                });
-
-                if (opts.itemRef) {
-                    this.updateScreenData({
-                        key: 'item',
-                        data: {
-                            className: 'CAUGHT',
-                            amount,
-                        },
-                        callback: () => {
-                            this.updateScreenData({
-                                key: 'item',
-                                data: {
-                                    name: null,
-                                    ref: null,
-                                    className: null,
-                                },
-                                callback: () => {
-                                    if (!amount) {
-                                        this.updateScreenData({
-                                            key: 'manual-dropper',
-                                            data: {
-                                                selectItem: true,
-                                                dropClass: null,
-                                            },
-                                        });
-                                    }
-                                }
-                            });
-                        }
-                    });
-
-                    return;
-                }
-
-                if (_.get(bucketRef, 'props.message') !== 'liquids') {
-                    this.updateScreenData({
-                        data: {
-                            'manual-dropper': {
-                                next: true,
-                            },
-                            item: {
-                                name: null,
-                                ref: null,
-                                className: null,
-                            },
-                        }
-                    });
-                    return;
-                }
-            },
-            onIncorrect: function () {
-                let hits = opts.hits + 1;
-
-                this.updateGameData({
-                    keys: [_.camelCase(opts.gameName), 'levels', opts.level],
-                    data: {
-                        start: false,
-                        score: opts.score - opts.pointsPerMiss,
-                        hits,
-                    }
-                });
-
-                this.updateScreenData({
-                    key: 'item',
-                    data: {
-                        removeClassName: true,
-                        className: null,
-                    }
-                });
-
-                if (hits === opts.maxHits) {
-                    setTimeout(() => {
-                        this.updateScreenData({
-                            data: {
-                                'manual-dropper': {
-                                    next: true,
-                                },
-                                item: {
-                                    name: null,
-                                    ref: null,
-                                    className: null,
-                                }
-                            }
-                        });
-                    }, 1000);
-                    return;
-                }
-
-                resort.call(this);
             },
         };
     },
