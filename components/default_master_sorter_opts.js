@@ -1,7 +1,6 @@
 import classNames from 'classnames';
 
 import defaultGameOpts from './default_game_opts';
-import ItemsToSort from './items_to_sort';
 import traysArray from './trays_array';
 
 let resort = function () {
@@ -39,29 +38,7 @@ let binNames = [
     'home',
 ];
 
-let itemsToSort = _.filter(ItemsToSort, item => _.includes(binNames, item.bin));
-
-let audioRefs = _.uniq(_.map(itemsToSort, v =>
-    _.kebabCase(_.replace(v.name, /\d+/g, '')))
-);
-
-let audioArray = _.map(audioRefs, (v, k) => ({
-    type: skoash.Audio,
-    ref: v,
-    key: k,
-    props: {
-        type: 'voiceOver',
-        src: `${CMWN.MEDIA.GAME + 'sound-assets/_vositems/' + v}.mp3`,
-        onPlay: function () {
-            this.updateScreenData({
-                keys: ['item', 'new'],
-                data: false,
-            });
-        }
-    },
-}));
-
-audioArray = audioArray.concat([
+let audioArray = [
     <skoash.Audio ref="next" type="sfx" src={`${CMWN.MEDIA.EFFECT}LunchboxSlide.mp3`} />,
     <skoash.Audio ref="correct" type="sfx" src={`${CMWN.MEDIA.EFFECT}ConveyorBelt.mp3`} />,
     <skoash.Audio ref="resort" type="sfx" src={`${CMWN.MEDIA.EFFECT}ResortWarning.mp3`} />,
@@ -71,7 +48,7 @@ audioArray = audioArray.concat([
     <skoash.Audio ref="tray" type="sfx" src={`${CMWN.MEDIA.EFFECT}TrayStackerRack.mp3`} />,
     <skoash.Audio ref="select" type="sfx" src={`${CMWN.MEDIA.EFFECT}ItemSelect.mp3`} />,
     <skoash.Audio ref="timer" type="sfx" src={`${CMWN.MEDIA.EFFECT}SecondTimer.mp3`} />,
-]);
+];
 
 export default _.defaults({
     gameName: 'master-sorter',
