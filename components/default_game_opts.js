@@ -29,34 +29,14 @@ let catchablesArray = _.map(itemsToSort, v => ({
     },
 }));
 
-let audioRefs = _.uniq(_.map(itemsToSort, v =>
-    _.kebabCase(_.replace(v.name, /\d+/g, '')))
-);
-
-let audioArray = _.map(audioRefs, (v, k) => ({
-    type: skoash.Audio,
-    ref: v,
-    key: k,
-    props: {
-        type: 'voiceOver',
-        src: `${CMWN.MEDIA.GAME + 'sound-assets/_vositems/' + v}.mp3`,
-        onPlay: function () {
-            this.updateScreenData({
-                keys: ['item', 'new'],
-                data: false,
-            });
-        }
-    },
-}));
-
-audioArray = audioArray.concat([
+let audioArray = [
     <skoash.Audio ref="drop" type="sfx" src={`${CMWN.MEDIA.EFFECT}ReleaseItem1.mp3`} />,
     <skoash.Audio ref="correct" type="sfx" src={`${CMWN.MEDIA.EFFECT}CorrectSelect.mp3`} />,
     <skoash.Audio ref="resort" type="sfx" src={`${CMWN.MEDIA.EFFECT}ResortWarning.mp3`} />,
     <skoash.Audio ref="retry" type="sfx" src={`${CMWN.MEDIA.EFFECT}level-fail.mp3`} />,
     <skoash.Audio ref="pickUp" type="sfx" src={`${CMWN.MEDIA.EFFECT}ItemFlip.mp3`} />,
     <skoash.Audio ref="timer" type="sfx" src={`${CMWN.MEDIA.EFFECT}SecondTimer.mp3`} />,
-]);
+];
 
 export default {
     gameName: 'recycling-champion',
@@ -283,6 +263,10 @@ export default {
                             this.setState({items}, () => {
                                 this.afterNext();
                             });
+                            skoash.trigger(
+                                'playMedia',
+                                {ref: _.kebabCase(_.replace(item.props.becomes.name, /\d+/g, ''))}
+                            );
                             this.updateScreenData({
                                 data: {
                                     item: {
@@ -313,6 +297,10 @@ export default {
                 }
             },
             onNext: function () {
+                skoash.trigger(
+                    'playMedia',
+                    {ref: _.kebabCase(_.replace(this.getFirstItem().props.className, /\d+/g, ''))}
+                );
                 this.updateScreenData({
                     data: {
                         item: {

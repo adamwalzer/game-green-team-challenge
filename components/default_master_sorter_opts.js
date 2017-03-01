@@ -230,6 +230,11 @@ export default _.defaults({
                         this.afterNext();
                     });
 
+                    skoash.trigger(
+                        'playMedia',
+                        {ref: _.kebabCase(_.replace(item.props.becomes.name, /\d+/g, ''))}
+                    );
+
                     this.updateGameData({
                         keys: [_.camelCase(opts.gameName), 'levels', opts.level, 'score'],
                         data: opts.score + opts.pointsPerItem,
@@ -326,6 +331,10 @@ export default _.defaults({
                 }
             },
             onNext: function () {
+                skoash.trigger(
+                    'playMedia',
+                    {ref: _.kebabCase(_.replace(this.getFirstItem().props.className, /\d+/g, ''))}
+                );
                 this.updateScreenData({
                     data: {
                         item: {

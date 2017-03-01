@@ -75,7 +75,6 @@ export default function (props, ref, key, opts = {}) {
             opts.next ? 'correct' :
             opts.revealOpen === 'resort' ? 'resort' :
             opts.revealOpen === 'retry' ? 'retry' :
-            opts.itemNew ? _.kebabCase(opts.itemName) :
             dropClass === 'TRAY-STACKING' && _.includes(opts.itemName, 'tray') ? 'tray' :
             opts.itemName ? 'select' : null
         );

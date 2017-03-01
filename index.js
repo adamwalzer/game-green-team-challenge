@@ -66,6 +66,31 @@ import MasterSorter5Screen from './components/master_sorter_level_five_screen';
 import NowAMemberScreen from './components/now_a_member_screen';
 import QuitScreen from './components/quit_screen';
 
+import ItemsToSort from './components/items_to_sort';
+
+let audioRefs = _.uniq(_.map(ItemsToSort, v =>
+    _.kebabCase(_.replace(v.name, /\d+/g, '')))
+);
+
+let audioArray = _.map(audioRefs, (v, k) => {
+    return {
+        type: skoash.Audio,
+        ref: v,
+        key: k,
+        props: {
+            type: 'voiceOver',
+            src: `${CMWN.MEDIA.GAME + 'sound-assets/_vositems/' + v}.mp3`,
+            checkReady: false,
+            onPlay: function () {
+                this.updateScreenData({
+                    keys: ['item', 'new'],
+                    data: false,
+                });
+            }
+        },
+    };
+});
+
 skoash.start(
     <skoash.Game
         config={config}
@@ -241,7 +266,7 @@ skoash.start(
             <div className="background trash" />,
             <div className="background transition" />,
             <div className="background quit" />,
-        ]}
+        ].concat(audioArray)}
     />
 );
 

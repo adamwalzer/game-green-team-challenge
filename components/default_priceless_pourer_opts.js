@@ -36,27 +36,7 @@ let catchablesArray = _.map(itemsToSort, v => ({
     },
 }));
 
-let audioRefs = _.uniq(_.map(itemsToSort, v =>
-    _.kebabCase(_.replace(v.name, /\d+/g, '')))
-);
-
-let audioArray = _.map(audioRefs, (v, k) => ({
-    type: skoash.Audio,
-    ref: v,
-    key: k,
-    props: {
-        type: 'voiceOver',
-        src: `${CMWN.MEDIA.GAME + 'sound-assets/_vositems/' + v}.mp3`,
-        onPlay: function () {
-            this.updateScreenData({
-                keys: ['item', 'new'],
-                data: false,
-            });
-        }
-    },
-}));
-
-audioArray = audioArray.concat([
+let audioArray = [
     <skoash.Audio ref="drop" type="sfx" src={`${CMWN.MEDIA.EFFECT}ClickRecButton.mp3`} />,
     <skoash.Audio ref="correct" type="sfx" src={`${CMWN.MEDIA.EFFECT}ConveyorBelt.mp3`} />,
     <skoash.Audio ref="resort" type="sfx" src={`${CMWN.MEDIA.EFFECT}ResortWarning.mp3`} />,
@@ -64,7 +44,7 @@ audioArray = audioArray.concat([
     <skoash.Audio ref="pickUp" type="sfx" src={`${CMWN.MEDIA.EFFECT}ItemFlip.mp3`} />,
     <skoash.Audio ref="pour" type="sfx" src={`${CMWN.MEDIA.EFFECT}LiquidPour.mp3`} />,
     <skoash.Audio ref="timer" type="sfx" src={`${CMWN.MEDIA.EFFECT}SecondTimer.mp3`} />,
-]);
+];
 
 export default _.defaults({
     gameName: 'priceless-pourer',
