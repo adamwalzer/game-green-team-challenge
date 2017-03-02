@@ -11,11 +11,7 @@ let getChildren = v => {
     if (v.children) return v.children;
 
     return (
-        <skoash.Sprite
-            src={`${CMWN.MEDIA.SPRITE}_${_.replace(v.bin, '-', '')}`}
-            frame={v.frame || 0}
-            static
-        />
+        <div className={`sprite ${v.bin}-item frame-${v.frame}`}/>
     );
 };
 
@@ -51,8 +47,6 @@ export default function (props, ref, key, opts = {}) {
             _.replace(_.get(dragging, 'props.className', ''), /\d+/g, '')
         );
         let binName = _.get(props, 'data.manual-dropper.binName', '');
-        let revealOpen = _.get(props, 'data.reveal.open', false);
-        let revealClose = _.get(props, 'data.reveal.close', false);
         let carouselNext = _.get(props, 'data.manual-dropper.next', false);
         let play = _.get(props, 'data.play', null);
 
@@ -60,14 +54,16 @@ export default function (props, ref, key, opts = {}) {
 
         let audioArray = opts.getAudioArray();
 
+        opts.revealOpen = _.get(props, 'data.reveal.open', false);
+        opts.revealClose = _.get(props, 'data.reveal.close', false);
         opts.score = _.get(props, `${LEVEL_PATH}.score`, 0);
         opts.highScore = _.get(props, `${LEVEL_PATH}.highScore`, 0);
         opts.hits = _.get(props, `${LEVEL_PATH}.hits`, 0);
         opts.selectableMessage = _.get(props, 'data.selectable.message', '');
         opts.playAudio = (
             play ? play :
-            revealOpen === 'resort' ? 'resort' :
-            revealOpen === 'retry' ? 'retry' :
+            opts.revealOpen === 'resort' ? 'resort' :
+            opts.revealOpen === 'retry' ? 'retry' :
             _.kebabCase(itemName) : null
         );
 
@@ -134,8 +130,8 @@ export default function (props, ref, key, opts = {}) {
                         format="mm:ss"
                         timeout={opts.timeout}
                         complete={gameComplete}
-                        pause={revealOpen}
-                        resume={!revealOpen}
+                        pause={opts.revealOpen}
+                        resume={!opts.revealOpen}
                         restart={start}
                         {...timerProps}
                     />
@@ -181,8 +177,8 @@ export default function (props, ref, key, opts = {}) {
                 />
                 <skoash.Reveal
                     openTarget="reveal"
-                    openReveal={revealOpen}
-                    closeReveal={revealClose}
+                    openReveal={opts.revealOpen}
+                    closeReveal={opts.revealClose}
                     {...revealProps}
                     list={[
                         <skoash.Component

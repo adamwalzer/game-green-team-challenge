@@ -41,8 +41,8 @@
                 }
 
                 $bins: FOOD_SHARE  RECYCLE  LANDFILL   COMPOST   LIQUIDS;
-                $tops:        150      350       350       350       200;
-                $lefts:      -280     -220       -50       110       150;
+                $tops:        280      350       350       350       200;
+                $lefts:      -330     -220       -50       110       150;
                 @for $i from 1 through length($bins) {
                     &.#{nth($bins, $i)} {
                         top: #{nth($tops, $i)}px;

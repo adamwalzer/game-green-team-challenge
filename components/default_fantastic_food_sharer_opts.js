@@ -56,11 +56,7 @@ let getChildren = v => {
     if (v.children) return v.children;
 
     return (
-        <skoash.Sprite
-            src={`${CMWN.MEDIA.SPRITE}_${_.replace(v.bin, '-', '')}`}
-            frame={v.frame || 0}
-            static
-        />
+        <div className={`sprite ${v.bin}-item frame-${v.frame}`}/>
     );
 };
 
@@ -75,27 +71,7 @@ let catchablesArray = _.map(itemsToSort, v => ({
     },
 }));
 
-let audioRefs = _.uniq(_.map(itemsToSort, v =>
-    _.kebabCase(_.replace(v.name, /\d+/g, '')))
-);
-
-let audioArray = _.map(audioRefs, (v, k) => ({
-    type: skoash.Audio,
-    ref: v,
-    key: k,
-    props: {
-        type: 'voiceOver',
-        src: `${CMWN.MEDIA.GAME + 'sound-assets/_vositems/' + v}.mp3`,
-        onPlay: function () {
-            this.updateScreenData({
-                keys: ['item', 'new'],
-                data: false,
-            });
-        }
-    },
-}));
-
-audioArray = audioArray.concat([
+let audioArray = [
     <skoash.MediaSequence ref="drop" silentOnStart>
         <skoash.Audio delay={2600} type="sfx" src={`${CMWN.MEDIA.EFFECT}ItemFunnel.mp3`} />
         <skoash.Audio type="sfx" src={`${CMWN.MEDIA.EFFECT}TruckDump.mp3`} />
@@ -106,7 +82,7 @@ audioArray = audioArray.concat([
     <skoash.Audio ref="pickUp" type="sfx" src={`${CMWN.MEDIA.EFFECT}ItemFlip.mp3`} />,
     <skoash.Audio ref="pour" type="sfx" src={`${CMWN.MEDIA.EFFECT}LiquidPour.mp3`} />,
     <skoash.Audio ref="timer" type="sfx" src={`${CMWN.MEDIA.EFFECT}SecondTimer.mp3`} />,
-]);
+];
 
 export default _.defaults({
     gameName: 'fantastic-food-sharer',
@@ -134,17 +110,70 @@ export default _.defaults({
             onTransitionEnd: function (e) {
                 if (e.propertyName === 'top' && _.includes(e.target.className, DROPPED)) {
                     let itemRef = this.refs[ITEMS + this.firstItemIndex];
-                    let DOMNode;
+                    let DOMNode = ReactDOM.findDOMNode(itemRef);
                     let onAnimationEnd;
 
                     this.updateScreenData({
                         key: 'truckClassName',
                         data: TILT,
                     });
+                    if (DOMNode !== e.target) return;
 
-                    if (opts.selectableMessage !== 'liquids') return;
+                    if (itemRef.props.message === 'liquids') {
+                        onAnimationEnd = () => {
+                            this.pickUp(_.defaults({
+                                onPickUp: function () {
+                                    let items = this.state.items;
+                                    let index = this.firstItemIndex;
+                                    let item = items[index];
+                                    item.props.className = item.props.becomes.name;
+                                    item.props.message = item.props.becomes.bin;
+                                    item.props['data-message'] = item.props.becomes.bin;
+                                    items[index] = item;
+                                    this.setState({items}, () => {
+                                        this.getFirstItem().removeAllClassNames();
+                                        this.updateScreenData({
+                                            keys: [this.props.refsTarget, 'refs'],
+                                            data: _.filter(this.refs, (v, k) => !k.indexOf(ITEMS)),
+                                        });
+                                    });
+                                    skoash.trigger(
+                                        'playMedia',
+                                        {ref: _.kebabCase(_.replace(item.props.becomes.name, /\d+/g, ''))}
+                                    );
+                                    this.updateScreenData({
+                                        data: {
+                                            item: {
+                                                name: _.startCase(
+                                                    _.replace(item.props.becomes.name, /\d+/g, '')
+                                                ),
+                                                pour: false,
+                                            },
+                                            'manual-dropper': {
+                                                dropClass: '',
+                                            },
+                                            truckClassName: '',
+                                        }
+                                    });
+                                    DOMNode.removeEventListener('animationend', onAnimationEnd);
+                                }
+                            }, this.props));
+                        };
 
-                    if (itemRef.props.message !== 'liquids') {
+                        if (!itemRef.state.className || !_.includes(itemRef.state.className, 'POUR')) {
+                            DOMNode.addEventListener('animationend', onAnimationEnd);
+                            itemRef.addClassName('POUR');
+                            this.updateScreenData({
+                                key: ['item', 'pour'],
+                                data: true,
+                            });
+                        }
+                    }
+
+                    if (!this.props.dropClass) return;
+                    if (this.props.dropClass === DROPPED) return;
+
+                    if (!_.includes(_.kebabCase(this.props.dropClass), itemRef.props.message)) {
                         let hits = opts.hits + 1;
 
                         this.updateGameData({
@@ -192,54 +221,18 @@ export default _.defaults({
                         return;
                     }
 
-                    DOMNode = ReactDOM.findDOMNode(itemRef);
-
-                    if (DOMNode !== e.target) return;
-
-                    onAnimationEnd = () => {
-                        this.pickUp(_.defaults({
-                            onPickUp: function () {
-                                let items = this.state.items;
-                                let index = this.firstItemIndex;
-                                let item = items[index];
-                                item.props.className = item.props.becomes.name;
-                                item.props.message = item.props.becomes.bin;
-                                item.props['data-message'] = item.props.becomes.bin;
-                                items[index] = item;
-                                this.setState({items}, () => {
-                                    this.getFirstItem().removeAllClassNames();
-                                    this.updateScreenData({
-                                        keys: [this.props.refsTarget, 'refs'],
-                                        data: _.filter(this.refs, (v, k) => !k.indexOf(ITEMS)),
-                                    });
-                                });
-                                this.updateScreenData({
-                                    data: {
-                                        item: {
-                                            name: _.startCase(
-                                                _.replace(item.props.becomes.name, /\d+/g, '')
-                                            ),
-                                            pour: false,
-                                        },
-                                        'manual-dropper': {
-                                            dropClass: '',
-                                        },
-                                        truckClassName: '',
-                                    }
-                                });
-                                DOMNode.removeEventListener('animationend', onAnimationEnd);
-                            }
-                        }, this.props));
-                    };
-
-                    if (!itemRef.state.className || itemRef.state.className.indexOf('POUR') === -1) {
-                        DOMNode.addEventListener('animationend', onAnimationEnd);
-                        itemRef.addClassName('POUR');
+                    if (this.props.dropClass !== 'LIQUIDS') {
+                        this.updateGameData({
+                            keys: [_.camelCase(opts.gameName), 'levels', opts.level, 'score'],
+                            data: opts.score + opts.pointsPerItem,
+                        });
                         this.updateScreenData({
-                            key: ['item', 'pour'],
+                            keys: ['manual-dropper', 'next'],
                             data: true,
                         });
+                        return;
                     }
+
                 }
             },
             onPickUp: function (itemRef) {
@@ -253,6 +246,10 @@ export default _.defaults({
                 });
             },
             onNext: function () {
+                skoash.trigger(
+                    'playMedia',
+                    {ref: _.kebabCase(_.replace(this.getFirstItem().props.className, /\d+/g, ''))}
+                );
                 this.updateScreenData({
                     data: {
                         item: {

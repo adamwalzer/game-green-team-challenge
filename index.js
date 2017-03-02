@@ -66,6 +66,31 @@ import MasterSorter5Screen from './components/master_sorter_level_five_screen';
 import NowAMemberScreen from './components/now_a_member_screen';
 import QuitScreen from './components/quit_screen';
 
+import ItemsToSort from './components/items_to_sort';
+
+let audioRefs = _.uniq(_.map(ItemsToSort, v =>
+    _.kebabCase(_.replace(v.name, /\d+/g, '')))
+);
+
+let audioArray = _.map(audioRefs, (v, k) => {
+    return {
+        type: skoash.Audio,
+        ref: v,
+        key: k,
+        props: {
+            type: 'voiceOver',
+            src: `${CMWN.MEDIA.GAME + 'sound-assets/_vositems/' + v}.mp3`,
+            checkReady: false,
+            onPlay: function () {
+                this.updateScreenData({
+                    keys: ['item', 'new'],
+                    data: false,
+                });
+            }
+        },
+    };
+});
+
 skoash.start(
     <skoash.Game
         config={config}
@@ -172,11 +197,26 @@ skoash.start(
             quit: QuitScreen,
         }}
         assets={[
-            <skoash.JSON src={`${CMWN.MEDIA.SPRITE}_recycle.json`} />,
-            <skoash.JSON src={`${CMWN.MEDIA.SPRITE}_liquids.json`} />,
-            <skoash.JSON src={`${CMWN.MEDIA.SPRITE}_landfill.json`} />,
-            <skoash.JSON src={`${CMWN.MEDIA.SPRITE}_foodshare.json`} />,
-            <skoash.JSON src={`${CMWN.MEDIA.SPRITE}_compost.json`} />,
+            <skoash.SpriteCSS
+                src={`${CMWN.MEDIA.SPRITE}_recycle`}
+                spriteClass="recycle-item"
+            />,
+            <skoash.SpriteCSS
+                src={`${CMWN.MEDIA.SPRITE}_liquids`}
+                spriteClass="liquids-item"
+            />,
+            <skoash.SpriteCSS
+                src={`${CMWN.MEDIA.SPRITE}_landfill`}
+                spriteClass="landfill-item"
+            />,
+            <skoash.SpriteCSS
+                src={`${CMWN.MEDIA.SPRITE}_foodshare`}
+                spriteClass="food-share-item"
+            />,
+            <skoash.SpriteCSS
+                src={`${CMWN.MEDIA.SPRITE}_compost`}
+                spriteClass="compost-item"
+            />,
             <skoash.Image className="hidden" src={`${CMWN.MEDIA.SPRITE}_recycle.png`} />,
             <skoash.Image className="hidden" src={`${CMWN.MEDIA.SPRITE}_liquids.png`} />,
             <skoash.Image className="hidden" src={`${CMWN.MEDIA.SPRITE}_landfill.png`} />,
@@ -205,7 +245,12 @@ skoash.start(
             <skoash.Image className="hidden" src={`${CMWN.MEDIA.IMAGE}background.trash.compost.jpg`} />,
             <skoash.Image className="hidden" src={`${CMWN.MEDIA.IMAGE}quit.background.jpg`} />,
             <skoash.Audio type="sfx" ref="button" src={`${CMWN.MEDIA.EFFECT}ButtonClick.mp3`} />,
-            <skoash.Audio type="sfx" ref="screen-complete" src={`${MEDIA.EFFECT}NextAppear.mp3`} />,
+            <skoash.Audio
+                type="sfx"
+                ref="screen-complete"
+                src={`${MEDIA.EFFECT}NextAppear.mp3`}
+                volume={3}
+            />,
             <skoash.Audio ref="BKG0" type="background" src={`${CMWN.MEDIA.EFFECT}titlescreen.mp3`} loop />,
             <skoash.Audio ref="BKG1" type="background" src={`${CMWN.MEDIA.EFFECT}BKG1.mp3`} loop />,
             <skoash.Audio ref="BKG2" type="background" src={`${CMWN.MEDIA.EFFECT}BKG2.mp3`} loop />,
@@ -221,7 +266,7 @@ skoash.start(
             <div className="background trash" />,
             <div className="background transition" />,
             <div className="background quit" />,
-        ]}
+        ].concat(audioArray)}
     />
 );
 

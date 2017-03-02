@@ -5,6 +5,6 @@ export default function (props, ref, key) {
     return DropperGameComponent(props, ref, key, _.defaults({
         level: 1,
         timeout: 120000,
-        scoreToWin: 100,
+        scoreToWin: 665,
     }, defaultOpts));
 }

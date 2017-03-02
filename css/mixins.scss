@@ -46,7 +46,7 @@
 }
 
 @mixin level-flips($row, $class: frame, $scale: 1.8) {
-    $flips: 2 4 5 3 6 1;
+    $flips: 2 4 5 6 3 1;
     @for $i from 1 through length($flips) {
         &[id*=-level-#{$i}] {
             .#{$class}::after {
@@ -347,7 +347,7 @@
     transition: top .25s 0s, left .25s .25s, transform .5s;
 
     $bins:  LIQUIDS FOOD-SHARE   RECYCLE  LANDFILL   COMPOST TRAY-STACKING;
-    $tops:       15       -250      -250      -250      -250          -250;
+    $tops:       15       -150      -150      -150      -150          -150;
     $lefts:    -110       -270       -90        90       270           440;
     @for $i from 1 through length($bins) {
         &.#{nth($bins, $i)} {

@@ -30,7 +30,7 @@
             > * {
                 @include sortable-item;
                 position: absolute;
-                transition: top .2s .5s, left .5s 0s, transform .5s, z-index 0s .7s;
+                transition: top .2s .5s, left .5s 0s, transform .35s, z-index 0s .7s;
                 width: 50px;
                 height: 50px;
 

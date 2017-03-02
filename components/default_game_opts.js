@@ -14,11 +14,7 @@ let getChildren = v => {
     if (v.children) return v.children;
 
     return (
-        <skoash.Sprite
-            src={`${CMWN.MEDIA.SPRITE}_${_.replace(v.bin, '-', '')}`}
-            frame={v.frame || 0}
-            static
-        />
+        <div className={`sprite ${v.bin}-item frame-${v.frame}`}/>
     );
 };
 
@@ -33,34 +29,14 @@ let catchablesArray = _.map(itemsToSort, v => ({
     },
 }));
 
-let audioRefs = _.uniq(_.map(itemsToSort, v =>
-    _.kebabCase(_.replace(v.name, /\d+/g, '')))
-);
-
-let audioArray = _.map(audioRefs, (v, k) => ({
-    type: skoash.Audio,
-    ref: v,
-    key: k,
-    props: {
-        type: 'voiceOver',
-        src: `${CMWN.MEDIA.GAME + 'sound-assets/_vositems/' + v}.mp3`,
-        onPlay: function () {
-            this.updateScreenData({
-                keys: ['item', 'new'],
-                data: false,
-            });
-        }
-    },
-}));
-
-audioArray = audioArray.concat([
+let audioArray = [
     <skoash.Audio ref="drop" type="sfx" src={`${CMWN.MEDIA.EFFECT}ReleaseItem1.mp3`} />,
     <skoash.Audio ref="correct" type="sfx" src={`${CMWN.MEDIA.EFFECT}CorrectSelect.mp3`} />,
     <skoash.Audio ref="resort" type="sfx" src={`${CMWN.MEDIA.EFFECT}ResortWarning.mp3`} />,
     <skoash.Audio ref="retry" type="sfx" src={`${CMWN.MEDIA.EFFECT}level-fail.mp3`} />,
     <skoash.Audio ref="pickUp" type="sfx" src={`${CMWN.MEDIA.EFFECT}ItemFlip.mp3`} />,
     <skoash.Audio ref="timer" type="sfx" src={`${CMWN.MEDIA.EFFECT}SecondTimer.mp3`} />,
-]);
+];
 
 export default {
     gameName: 'recycling-champion',
@@ -141,7 +117,7 @@ export default {
     getRevealProps(opts) {
         return {
             onOpen: function () {
-                if (opts.revealOpen === 'next') return;
+                if (!opts.revealOpen || opts.revealOpen === 'next') return;
                 this.updateGameData({
                     keys: [_.camelCase(opts.gameName), 'levels', opts.level, 'start'],
                     data: false,
@@ -173,13 +149,19 @@ export default {
                 let left = ReactDOM.findDOMNode(this.refs[binRefKey]).offsetLeft - 785;
                 if (opts.left === left) {
                     this.updateScreenData({
-                        keys: ['manual-dropper', 'drop'],
-                        data: true,
+                        key: 'manual-dropper',
+                        data: {
+                            drop: true,
+                            dropClass: `DROPPED ${_.toUpper(opts.binNames[binRefKey])}`,
+                        },
                     });
                 } else {
                     this.updateScreenData({
-                        keys: ['manual-dropper', 'left'],
-                        data: left,
+                        key: 'manual-dropper',
+                        data: {
+                            left,
+                            dropClass: `DROPPED ${_.toUpper(opts.binNames[binRefKey])}`,
+                        }
                     });
                 }
             },
@@ -188,13 +170,137 @@ export default {
     getDropperProps(opts) {
         return {
             onTransitionEnd: function (e) {
-                if (this.DOMNode !== e.target || opts.left === 0) return;
-                this.updateScreenData({
-                    keys: ['manual-dropper', 'drop'],
-                    data: true,
-                });
+                let itemRef = this.refs['items-' + this.firstItemIndex];
+                let DOMNode;
+                let onAnimationEnd;
+
+                if (this.DOMNode === e.target && opts.left !== 0) {
+                    this.updateScreenData({
+                        keys: ['manual-dropper', 'drop'],
+                        data: true,
+                    });
+                    return;
+                }
+
+                DOMNode = ReactDOM.findDOMNode(itemRef);
+
+                if (DOMNode !== e.target) return;
+                if (!itemRef.state.className) return;
+
+                if (e.propertyName !== 'left' && e.propertyName !== 'transform') return;
+                if (!this.props.dropClass) return;
+
+                if (!_.includes(_.kebabCase(this.props.dropClass), itemRef.props.message)) {
+                    let hits = opts.hits + 1;
+
+                    this.updateGameData({
+                        keys: [_.camelCase(opts.gameName), 'levels', opts.level],
+                        data: {
+                            start: false,
+                            score: opts.score - opts.pointsPerMiss,
+                            hits,
+                        }
+                    });
+
+                    if (hits === opts.maxHits) {
+                        setTimeout(() => {
+                            this.updateScreenData({
+                                keys: ['manual-dropper', 'pickUp'],
+                                data: true,
+                            });
+                        }, 1000);
+                        return;
+                    }
+
+                    this.updateScreenData({
+                        keys: ['reveal', 'open'],
+                        data: 'resort',
+                        callback: () => {
+                            setTimeout(() => {
+                                this.updateScreenData({
+                                    data: {
+                                        reveal: {
+                                            open: null,
+                                            close: true,
+                                        },
+                                        'manual-dropper': {
+                                            pickUp: true,
+                                        },
+                                        catcher: {
+                                            caught: false,
+                                        }
+                                    }
+                                });
+                            }, 1000);
+                        }
+                    });
+
+                    return;
+                }
+
+                if (this.props.dropClass !== 'LIQUIDS') {
+                    this.updateGameData({
+                        keys: [_.camelCase(opts.gameName), 'levels', opts.level, 'score'],
+                        data: opts.score + opts.pointsPerItem,
+                    });
+                    this.updateScreenData({
+                        keys: ['manual-dropper', 'next'],
+                        data: true,
+                    });
+                    return;
+                }
+
+                onAnimationEnd = () => {
+                    this.pickUp(_.defaults({
+                        onPickUp: function () {
+                            let items = this.state.items;
+                            let index = this.firstItemIndex;
+                            let item = items[index];
+                            item.props.className = item.props.becomes.name;
+                            item.props.message = item.props.becomes.bin;
+                            item.props['data-message'] = item.props.becomes.bin;
+                            items[index] = item;
+                            this.setState({items}, () => {
+                                this.afterNext();
+                            });
+                            skoash.trigger(
+                                'playMedia',
+                                {ref: _.kebabCase(_.replace(item.props.becomes.name, /\d+/g, ''))}
+                            );
+                            this.updateScreenData({
+                                data: {
+                                    item: {
+                                        name: _.startCase(_.replace(item.props.becomes.name, /\d+/g, '')),
+                                        pour: false,
+                                    },
+                                    'manual-dropper': {
+                                        dropClass: '',
+                                    },
+                                }
+                            });
+                            this.updateGameData({
+                                keys: [_.camelCase(opts.gameName), 'levels', opts.level, 'score'],
+                                data: opts.score + opts.pointsPerItem,
+                            });
+                            DOMNode.removeEventListener('animationend', onAnimationEnd);
+                        }
+                    }, this.props));
+                };
+
+                if (!itemRef.state.className || itemRef.state.className.indexOf('POUR') === -1) {
+                    DOMNode.addEventListener('animationend', onAnimationEnd);
+                    itemRef.addClassName('POUR');
+                    this.updateScreenData({
+                        key: ['item', 'pour'],
+                        data: true,
+                    });
+                }
             },
             onNext: function () {
+                skoash.trigger(
+                    'playMedia',
+                    {ref: _.kebabCase(_.replace(this.getFirstItem().props.className, /\d+/g, ''))}
+                );
                 this.updateScreenData({
                     data: {
                         item: {
@@ -211,65 +317,6 @@ export default {
                 this.updateScreenData({
                     key: ['manual-dropper', 'dropClass'],
                     data: '',
-                });
-            },
-        };
-    },
-    getCatcherProps(opts) {
-        return {
-            onCorrect: function () {
-                this.updateGameData({
-                    keys: [_.camelCase(opts.gameName), 'levels', opts.level, 'score'],
-                    data: opts.score + opts.pointsPerItem,
-                });
-                this.updateScreenData({
-                    keys: ['manual-dropper', 'next'],
-                    data: true,
-                });
-            },
-            onIncorrect: function () {
-                let hits = opts.hits + 1;
-
-                this.updateGameData({
-                    keys: [_.camelCase(opts.gameName), 'levels', opts.level],
-                    data: {
-                        start: false,
-                        score: opts.score - opts.pointsPerMiss,
-                        hits,
-                    }
-                });
-
-                if (hits === opts.maxHits) {
-                    setTimeout(() => {
-                        this.updateScreenData({
-                            keys: ['manual-dropper', 'pickUp'],
-                            data: true,
-                        });
-                    }, 1000);
-                    return;
-                }
-
-                this.updateScreenData({
-                    keys: ['reveal', 'open'],
-                    data: 'resort',
-                    callback: () => {
-                        setTimeout(() => {
-                            this.updateScreenData({
-                                data: {
-                                    reveal: {
-                                        open: null,
-                                        close: true,
-                                    },
-                                    'manual-dropper': {
-                                        pickUp: true,
-                                    },
-                                    catcher: {
-                                        caught: false,
-                                    }
-                                }
-                            });
-                        }, 1000);
-                    }
                 });
             },
         };

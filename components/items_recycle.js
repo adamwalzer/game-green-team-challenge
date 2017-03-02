@@ -22,7 +22,6 @@ let names = [
     'empty-plastic-bottle-1',
     'empty-plastic-bottle-2',
     'empty-plastic-bottle-3',
-    'empty-plastic-package',
     'empty-yogurt-container-2',
     'empty-yogurt-container-3',
     'empty-yogurt-container-5',
@@ -46,13 +45,17 @@ let names = [
     'plastic-cup-5',
     'plastic-cup-6',
     'plastic-cup-7',
-    'plastic-lids-1',
     'plastic-packaging-2',
     'plastic-packaging-4',
     'plastic-packaging-5',
     'plastic-packaging-6',
     'plastic-packaging-7',
     'wrapping-paper',
+    'juice-box',
+    'juice-box-2',
+    'juice-box-3',
+    'juice-box-4',
+    'juice-box-5',
 ];
 
 export default _.map(names, (name, frame) => ({

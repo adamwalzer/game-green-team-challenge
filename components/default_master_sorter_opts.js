@@ -1,7 +1,6 @@
 import classNames from 'classnames';
 
 import defaultGameOpts from './default_game_opts';
-import ItemsToSort from './items_to_sort';
 import traysArray from './trays_array';
 
 let resort = function () {
@@ -39,29 +38,7 @@ let binNames = [
     'home',
 ];
 
-let itemsToSort = _.filter(ItemsToSort, item => _.includes(binNames, item.bin));
-
-let audioRefs = _.uniq(_.map(itemsToSort, v =>
-    _.kebabCase(_.replace(v.name, /\d+/g, '')))
-);
-
-let audioArray = _.map(audioRefs, (v, k) => ({
-    type: skoash.Audio,
-    ref: v,
-    key: k,
-    props: {
-        type: 'voiceOver',
-        src: `${CMWN.MEDIA.GAME + 'sound-assets/_vositems/' + v}.mp3`,
-        onPlay: function () {
-            this.updateScreenData({
-                keys: ['item', 'new'],
-                data: false,
-            });
-        }
-    },
-}));
-
-audioArray = audioArray.concat([
+let audioArray = [
     <skoash.Audio ref="next" type="sfx" src={`${CMWN.MEDIA.EFFECT}LunchboxSlide.mp3`} />,
     <skoash.Audio ref="correct" type="sfx" src={`${CMWN.MEDIA.EFFECT}ConveyorBelt.mp3`} />,
     <skoash.Audio ref="resort" type="sfx" src={`${CMWN.MEDIA.EFFECT}ResortWarning.mp3`} />,
@@ -71,7 +48,7 @@ audioArray = audioArray.concat([
     <skoash.Audio ref="tray" type="sfx" src={`${CMWN.MEDIA.EFFECT}TrayStackerRack.mp3`} />,
     <skoash.Audio ref="select" type="sfx" src={`${CMWN.MEDIA.EFFECT}ItemSelect.mp3`} />,
     <skoash.Audio ref="timer" type="sfx" src={`${CMWN.MEDIA.EFFECT}SecondTimer.mp3`} />,
-]);
+];
 
 export default _.defaults({
     gameName: 'master-sorter',
@@ -107,19 +84,14 @@ export default _.defaults({
                 let tray = this.getFirstItem();
                 let itemIndex = _.indexOf(tray.refs['children-0'].state.classes, 'SELECTED');
                 let itemRef = !opts.itemRef ? tray : tray.refs['children-0'].refs[itemIndex];
-                let DOMNode;
+                let DOMNode = ReactDOM.findDOMNode(itemRef);
                 let onAnimationEnd;
+                if (DOMNode !== e.target) return;
+                if (!itemRef.state.className) return;
 
-                if (e.propertyName !== 'top' ||
-                    (
-                        !_.includes(opts.itemClassName, 'LIQUIDS') &&
-                        !_.includes(this.props.dropClass, 'LIQUIDS')
-                    )
-                ) {
-                    return;
-                }
+                if (e.propertyName !== 'top') return;
 
-                if (!opts.itemRef) {
+                if (opts.itemClassName && !opts.itemRef) {
                     this.pickUp();
                     this.updateScreenData({
                         key: 'manual-dropper',
@@ -130,7 +102,14 @@ export default _.defaults({
                     });
                 }
 
-                if (itemRef.props.message !== 'liquids') {
+                if ((
+                        !opts.itemClassName &&
+                        !_.includes(_.kebabCase(this.props.dropClass), itemRef.props.message)
+                    ) ||
+                    (
+                        opts.itemClassName &&
+                        !_.includes(_.kebabCase(opts.itemClassName), itemRef.props.message)
+                    )) {
                     let hits = opts.hits + 1;
 
                     this.updateGameData({
@@ -173,9 +152,46 @@ export default _.defaults({
                     return;
                 }
 
-                DOMNode = ReactDOM.findDOMNode(itemRef);
+                if (opts.itemClassName !== 'LIQUIDS' && this.props.dropClass !== 'LIQUIDS') {
+                    let amount = opts.itemAmount - 1;
 
-                if (DOMNode !== e.target) return;
+                    this.updateGameData({
+                        keys: [_.camelCase(opts.gameName), 'levels', opts.level, 'score'],
+                        data: opts.score + opts.pointsPerItem,
+                    });
+
+                    this.updateScreenData({
+                        key: 'item',
+                        data: {
+                            className: 'CAUGHT',
+                            amount,
+                        },
+                        callback: () => {
+                            this.updateScreenData({
+                                key: 'item',
+                                data: {
+                                    name: null,
+                                    ref: null,
+                                    className: null,
+                                },
+                                callback: () => {
+                                    if (!amount) {
+                                        this.updateScreenData({
+                                            key: 'manual-dropper',
+                                            data: {
+                                                selectItem: true,
+                                            },
+                                        });
+                                    }
+                                }
+                            });
+                        }
+                    });
+
+                    if (!opts.itemClassName) this.next();
+
+                    return;
+                }
 
                 onAnimationEnd = () => {
                     let items = this.state.items;
@@ -187,7 +203,14 @@ export default _.defaults({
                     selectedItem.props.message = selectedItem.props.becomes.bin;
                     selectedItem.props['data-message'] = selectedItem.props.becomes.bin;
                     items[index] = item;
-                    this.setState({items});
+                    this.setState({items}, () => {
+                        this.afterNext();
+                    });
+
+                    skoash.trigger(
+                        'playMedia',
+                        {ref: _.kebabCase(_.replace(item.props.becomes.name, /\d+/g, ''))}
+                    );
 
                     this.updateGameData({
                         keys: [_.camelCase(opts.gameName), 'levels', opts.level, 'score'],
@@ -260,7 +283,13 @@ export default _.defaults({
                     let tray = this.getFirstItem();
 
                     if (tray.props.message === 'home') {
-                        tray.addClassName('HOME');
+                        this.updateScreenData({
+                            key: 'manual-dropper',
+                            data: {
+                                drop: true,
+                                dropClass: 'HOME',
+                            },
+                        });
                     } else {
                         let rect = ReactDOM.findDOMNode(tray).getBoundingClientRect();
                         let name = _.startCase(_.replace(tray.props.className, /\d+/g, ''));
@@ -279,6 +308,10 @@ export default _.defaults({
                 }
             },
             onNext: function () {
+                skoash.trigger(
+                    'playMedia',
+                    {ref: _.kebabCase(_.replace(this.getFirstItem().props.className, /\d+/g, ''))}
+                );
                 this.updateScreenData({
                     data: {
                         item: {
@@ -291,107 +324,6 @@ export default _.defaults({
                         },
                     }
                 });
-            },
-        };
-    },
-    getCatcherProps(opts) {
-        return {
-            onCorrect: function (bucketRef) {
-                let amount = opts.itemAmount - 1;
-
-                this.updateGameData({
-                    keys: [_.camelCase(opts.gameName), 'levels', opts.level, 'score'],
-                    data: opts.score + opts.pointsPerItem,
-                });
-
-                if (opts.itemRef) {
-                    this.updateScreenData({
-                        key: 'item',
-                        data: {
-                            className: 'CAUGHT',
-                            amount,
-                        },
-                        callback: () => {
-                            this.updateScreenData({
-                                key: 'item',
-                                data: {
-                                    name: null,
-                                    ref: null,
-                                    className: null,
-                                },
-                                callback: () => {
-                                    if (!amount) {
-                                        this.updateScreenData({
-                                            key: 'manual-dropper',
-                                            data: {
-                                                selectItem: true,
-                                                dropClass: null,
-                                            },
-                                        });
-                                    }
-                                }
-                            });
-                        }
-                    });
-
-                    return;
-                }
-
-                if (_.get(bucketRef, 'props.message') !== 'liquids') {
-                    this.updateScreenData({
-                        data: {
-                            'manual-dropper': {
-                                next: true,
-                            },
-                            item: {
-                                name: null,
-                                ref: null,
-                                className: null,
-                            },
-                        }
-                    });
-                    return;
-                }
-            },
-            onIncorrect: function () {
-                let hits = opts.hits + 1;
-
-                this.updateGameData({
-                    keys: [_.camelCase(opts.gameName), 'levels', opts.level],
-                    data: {
-                        start: false,
-                        score: opts.score - opts.pointsPerMiss,
-                        hits,
-                    }
-                });
-
-                this.updateScreenData({
-                    key: 'item',
-                    data: {
-                        removeClassName: true,
-                        className: null,
-                    }
-                });
-
-                if (hits === opts.maxHits) {
-                    setTimeout(() => {
-                        this.updateScreenData({
-                            data: {
-                                'manual-dropper': {
-                                    next: true,
-                                },
-                                item: {
-                                    name: null,
-                                    ref: null,
-                                    className: null,
-                                }
-                            }
-                        });
-                    }, 1000);
-                    return;
-                }
-
-                resort.call(this);
             },
         };
     },
