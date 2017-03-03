@@ -99,7 +99,6 @@ skoash.start(
         screens={[
             iOSScreen,
             TitleScreen,
-            /*
             HiThereScreen,
             KeyIsSortingScreen,
             LightsScreen,
@@ -140,7 +139,6 @@ skoash.start(
             LevelCompleteScreen(2),
             LevelScreen(3.0),
             FantasticFoodSharer1InfoScreen,
-            */
             FantasticFoodSharer1Screen,
             LevelScreen(3.1),
             FantasticFoodSharer2InfoScreen,
@@ -245,6 +243,11 @@ skoash.start(
                 dataTarget="priceless-orange"
             />,
             <skoash.SpriteCSS
+                src={`${CMWN.MEDIA.SPRITE}level3robotarm`}
+                spriteClass="fantastic-claw"
+                dataTarget="fantastic-claw"
+            />,
+            <skoash.SpriteCSS
                 src={`${CMWN.MEDIA.SPRITE}level.3.conveyor.belt`}
                 spriteClass="fantastic-belt"
                 dataTarget="fantastic-belt"
@@ -268,6 +271,12 @@ skoash.start(
                 src={`${CMWN.MEDIA.SPRITE}level.3.orange.juice`}
                 spriteClass="fantastic-orange"
                 dataTarget="fantastic-orange"
+            />,
+            <skoash.SpriteCSS
+                src={`${CMWN.MEDIA.SPRITE}front.back.funnel`}
+                frameSelectors={['.back', '.front']}
+                spriteClass="funnel"
+                dataTarget="funnel"
             />,
             <skoash.Image className="hidden" src={`${CMWN.MEDIA.SPRITE}_recycle.png`} />,
             <skoash.Image className="hidden" src={`${CMWN.MEDIA.SPRITE}_liquids.png`} />,

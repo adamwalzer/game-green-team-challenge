@@ -11,9 +11,6 @@ const TILT = 'TILT';
 const ITEMS = 'items-';
 
 const TRUCK_SRC = CMWN.MEDIA.SPRITE + 'dumptruck.png';
-const BELT_SRC = CMWN.MEDIA.SPRITE + 'level.3.conveyor.belt';
-const CLAW_SRC = CMWN.MEDIA.SPRITE + 'level3robotarm';
-const FUNNEL_SRC = CMWN.MEDIA.SPRITE + 'front.back.funnel';
 
 const binNames = [
     'food-share',
@@ -86,6 +83,14 @@ let audioArray = [
 
 let onAnimationComplete = function () {
     setTimeout(() => this.setState({frame: this.props.frame}), 500);
+};
+
+let onAnimationClawComplete = function () {
+    this.setState({frame: this.props.frame});
+    this.updateScreenData({
+        key: 'moveClaw',
+        data: false,
+    });
 };
 
 export default _.defaults({
@@ -312,22 +317,16 @@ export default _.defaults({
                     className="hidden"
                     src={TRUCK_SRC}
                 />
-                <skoash.Sprite
-                    className="claw"
-                    src={CLAW_SRC}
+                <skoash.Animation
+                    className="fantastic-claw"
+                    frames={_.get(opts.props, 'gameState.data.fantastic-claw.frames.length', 1)}
                     frame={0}
                     loop={false}
-                    animate={opts.moveClaw}
                     duration={[
                         200, 200, 200, 500, 100, 1000, 200, 200, 200, 200, 200, 200
                     ]}
-                    onComplete={function () {
-                        this.setState({frame: this.props.frame});
-                        this.updateScreenData({
-                            key: 'moveClaw',
-                            data: false,
-                        });
-                    }}
+                    animate={opts.moveClaw}
+                    onComplete={onAnimationClawComplete}
                 />
                 <skoash.Animation
                     className="fantastic-belt"
@@ -382,20 +381,8 @@ export default _.defaults({
                     animate={opts.pour}
                     onComplete={onAnimationComplete}
                 />
-                <skoash.Component className="funnel">
-                    <skoash.Sprite
-                        className="back"
-                        src={FUNNEL_SRC}
-                        frame={0}
-                        static
-                    />
-                    <skoash.Sprite
-                        className="front"
-                        src={FUNNEL_SRC}
-                        frame={1}
-                        static
-                    />
-                </skoash.Component>
+                <div className="funnel back" />
+                <div className="funnel front" />
                 <skoash.Component
                     className={classNames('truck', opts.truckClassName, opts.selectableMessage)}
                     onTransitionEnd={onTruckTransitionEnd.bind(null, opts)}

@@ -139,7 +139,7 @@
     }
 
     .extras {
-        .claw {
+        .fantastic-claw {
             @include position(absolute, -180px null null 70px);
             transform: scale(.3);
         }
@@ -151,20 +151,11 @@
         }
 
         .funnel {
-            @include position(absolute, 80px null null 190px);
+            @include position(absolute, -80px null null 190px);
+            transform: scale(.2);
 
-            .back,
-            .front {
-                transform: scale(.2);
-            }
-
-            .back {
-                @include position(absolute, 0 null null 0);
+            &.back {
                 z-index: -1;
-            }
-
-            .front {
-                @include position(absolute, -107px null null 80px);
             }
         }
 

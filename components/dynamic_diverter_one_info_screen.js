@@ -14,10 +14,7 @@ export default function (props, ref, key) {
                     that should not be in<br/>
                     the bin to be resorted.
                 </p>
-                <skoash.Sprite
-                    src={`${CMWN.MEDIA.SPRITE}_compost`}
-                    frame={0}
-                />
+                <div className="compost-item frame-0" />
             </skoash.Component>
         ),
         vo: 'DragToBin',
