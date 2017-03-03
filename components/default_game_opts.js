@@ -30,7 +30,7 @@ let catchablesArray = _.map(itemsToSort, v => ({
 }));
 
 let audioArray = [
-    <skoash.Audio ref="drop" type="sfx" src={`${CMWN.MEDIA.EFFECT}ReleaseItem1.mp3`} />,
+    <skoash.Audio ref="drop" type="sfx" src={`${CMWN.MEDIA.EFFECT}ReleaseItem3.mp3`} />,
     <skoash.Audio ref="correct" type="sfx" src={`${CMWN.MEDIA.EFFECT}CorrectSelect.mp3`} />,
     <skoash.Audio ref="resort" type="sfx" src={`${CMWN.MEDIA.EFFECT}ResortWarning.mp3`} />,
     <skoash.Audio ref="retry" type="sfx" src={`${CMWN.MEDIA.EFFECT}level-fail.mp3`} />,
