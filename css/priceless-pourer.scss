@@ -23,18 +23,18 @@
                 transition: top .5s $ease-out, left .5s $ease-in, transform .5s;
                 width: 50px;
                 height: 50px;
+                transform-origin: 0 0;
 
                 $tops:   95  45   0 -55;
                 $scales:  2 1.6 1.2   1;
                 @for $i from 1 through length($tops) {
                     &:nth-of-type(#{$i}) {
                         transform: scale(#{nth($scales, $i)}) translateX(-50%) translateY(#{nth($tops, $i)}px);
-                        transform-origin: 0 0;
                     }
                 }
 
                 $bins:  LIQUIDS   RECYCLE  LANDFILL   COMPOST;
-                $tops:     -120       200       200       200;
+                $tops:      -70       200       200       200;
                 $lefts:     -30        10       240       460;
                 $tds: $ease-out  $ease-in  $ease-in  $ease-in;
                 $lds:  $ease-in $ease-out $ease-out $ease-out;
@@ -106,7 +106,7 @@
         }
     }
 
-    .belt {
+    .priceless-belt {
         @include center;
         transform: translateX(-50%) translateY(-50%) scale(.5);
         z-index: -1;

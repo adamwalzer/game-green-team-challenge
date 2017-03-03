@@ -84,6 +84,10 @@ let audioArray = [
     <skoash.Audio ref="timer" type="sfx" src={`${CMWN.MEDIA.EFFECT}SecondTimer.mp3`} />,
 ];
 
+let onAnimationComplete = function () {
+    setTimeout(() => this.setState({frame: this.props.frame}), 500);
+};
+
 export default _.defaults({
     gameName: 'fantastic-food-sharer',
     gameNumber: 3,
@@ -325,60 +329,58 @@ export default _.defaults({
                         });
                     }}
                 />
-                <skoash.Sprite
-                    className="belt"
-                    src={BELT_SRC}
+                <skoash.Animation
+                    className="fantastic-belt"
+                    frames={_.get(opts.props, 'gameState.data.fantastic-belt.frames.length', 1)}
                     frame={0}
                     loop={false}
                     duration={500}
                     animate={opts.next}
-                    onComplete={function () {
-                        this.setState({frame: this.props.frame});
-                    }}
+                    onComplete={onAnimationComplete}
                 />
-                <skoash.Sprite
-                    className={classNames('pour', {show: opts.pour && color === 'chocolate'})}
-                    src={`${CMWN.MEDIA.SPRITE}level.3.chocolate.milk`}
-                    animate={opts.pour}
+                <skoash.Animation
+                    className={classNames('pour fantastic-chocolate', {
+                        show: opts.pour && color === 'chocolate'
+                    })}
+                    frames={_.get(opts.props, 'gameState.data.fantastic-chocolate.frames.length', 1)}
+                    frame={0}
                     loop={false}
                     duration={600}
-                    frame={0}
-                    onComplete={function () {
-                        this.setState({frame: this.props.frame});
-                    }}
-                />
-                <skoash.Sprite
-                    className={classNames('pour', {show: opts.pour && color === 'fruit'})}
-                    src={`${CMWN.MEDIA.SPRITE}level.3.fruit.juice`}
                     animate={opts.pour}
+                    onComplete={onAnimationComplete}
+                />
+                <skoash.Animation
+                    className={classNames('pour fantastic-fruit', {
+                        show: opts.pour && color === 'fruit'
+                    })}
+                    frames={_.get(opts.props, 'gameState.data.fantastic-fruit.frames.length', 1)}
+                    frame={0}
                     loop={false}
                     duration={600}
-                    frame={0}
-                    onComplete={function () {
-                        this.setState({frame: this.props.frame});
-                    }}
-                />
-                <skoash.Sprite
-                    className={classNames('pour', {show: opts.pour && color === 'milk'})}
-                    src={`${CMWN.MEDIA.SPRITE}level.3.milk`}
                     animate={opts.pour}
+                    onComplete={onAnimationComplete}
+                />
+                <skoash.Animation
+                    className={classNames('pour fantastic-milk', {
+                        show: opts.pour && color === 'milk'
+                    })}
+                    frames={_.get(opts.props, 'gameState.data.fantastic-milk.frames.length', 1)}
+                    frame={0}
                     loop={false}
                     duration={600}
-                    frame={0}
-                    onComplete={function () {
-                        this.setState({frame: this.props.frame});
-                    }}
-                />
-                <skoash.Sprite
-                    className={classNames('pour', {show: opts.pour && color === 'orange'})}
-                    src={`${CMWN.MEDIA.SPRITE}level.3.orange.juice`}
                     animate={opts.pour}
+                    onComplete={onAnimationComplete}
+                />
+                <skoash.Animation
+                    className={classNames('pour fantastic-orange', {
+                        show: opts.pour && color === 'orange'
+                    })}
+                    frames={_.get(opts.props, 'gameState.data.fantastic-orange.frames.length', 1)}
+                    frame={0}
                     loop={false}
                     duration={600}
-                    frame={0}
-                    onComplete={function () {
-                        this.setState({frame: this.props.frame});
-                    }}
+                    animate={opts.pour}
+                    onComplete={onAnimationComplete}
                 />
                 <skoash.Component className="funnel">
                     <skoash.Sprite

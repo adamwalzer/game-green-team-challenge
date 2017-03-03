@@ -144,7 +144,7 @@
             transform: scale(.3);
         }
 
-        .belt {
+        .fantastic-belt {
             @include position(absolute, 30px null null -250px);
             transform: scale(.5);
             z-index: -1;

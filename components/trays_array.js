@@ -25,6 +25,10 @@ let onSelect = function (key) {
             left: rect.left,
         }
     });
+    skoash.trigger(
+        'playMedia',
+        {ref: _.kebabCase(_.replace(ref.props.className, /\d+/g, ''))}
+    );
 };
 
 let onBootstrap = function () {

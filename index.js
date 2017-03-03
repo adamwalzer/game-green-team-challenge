@@ -99,6 +99,7 @@ skoash.start(
         screens={[
             iOSScreen,
             TitleScreen,
+            /*
             HiThereScreen,
             KeyIsSortingScreen,
             LightsScreen,
@@ -139,6 +140,7 @@ skoash.start(
             LevelCompleteScreen(2),
             LevelScreen(3.0),
             FantasticFoodSharer1InfoScreen,
+            */
             FantasticFoodSharer1Screen,
             LevelScreen(3.1),
             FantasticFoodSharer2InfoScreen,
@@ -216,6 +218,56 @@ skoash.start(
             <skoash.SpriteCSS
                 src={`${CMWN.MEDIA.SPRITE}_compost`}
                 spriteClass="compost-item"
+            />,
+            <skoash.SpriteCSS
+                src={`${CMWN.MEDIA.SPRITE}level.1.conveyor.belt`}
+                spriteClass="priceless-belt"
+                dataTarget="priceless-belt"
+            />,
+            <skoash.SpriteCSS
+                src={`${CMWN.MEDIA.SPRITE}level.2.chocolate.milk`}
+                spriteClass="priceless-chocolate"
+                dataTarget="priceless-chocolate"
+            />,
+            <skoash.SpriteCSS
+                src={`${CMWN.MEDIA.SPRITE}level.2.milk`}
+                spriteClass="priceless-milk"
+                dataTarget="priceless-milk"
+            />,
+            <skoash.SpriteCSS
+                src={`${CMWN.MEDIA.SPRITE}level.2.fruit.juice`}
+                spriteClass="priceless-fruit"
+                dataTarget="priceless-fruit"
+            />,
+            <skoash.SpriteCSS
+                src={`${CMWN.MEDIA.SPRITE}level.2.orange.juice`}
+                spriteClass="priceless-orange"
+                dataTarget="priceless-orange"
+            />,
+            <skoash.SpriteCSS
+                src={`${CMWN.MEDIA.SPRITE}level.3.conveyor.belt`}
+                spriteClass="fantastic-belt"
+                dataTarget="fantastic-belt"
+            />,
+            <skoash.SpriteCSS
+                src={`${CMWN.MEDIA.SPRITE}level.3.chocolate.milk`}
+                spriteClass="fantastic-chocolate"
+                dataTarget="fantastic-chocolate"
+            />,
+            <skoash.SpriteCSS
+                src={`${CMWN.MEDIA.SPRITE}level.3.milk`}
+                spriteClass="fantastic-milk"
+                dataTarget="fantastic-milk"
+            />,
+            <skoash.SpriteCSS
+                src={`${CMWN.MEDIA.SPRITE}level.3.fruit.juice`}
+                spriteClass="fantastic-fruit"
+                dataTarget="fantastic-fruit"
+            />,
+            <skoash.SpriteCSS
+                src={`${CMWN.MEDIA.SPRITE}level.3.orange.juice`}
+                spriteClass="fantastic-orange"
+                dataTarget="fantastic-orange"
             />,
             <skoash.Image className="hidden" src={`${CMWN.MEDIA.SPRITE}_recycle.png`} />,
             <skoash.Image className="hidden" src={`${CMWN.MEDIA.SPRITE}_liquids.png`} />,

@@ -21,18 +21,18 @@
     }
 }
 
-$transform: scale(1.3) translateX(-50%) translateY(185px);
+$transform: scale(2) translateX(-50%) translateY(95px);
 @keyframes pour {
     0% {
-        transform: $transform rotate(0deg) scale(2);
+        transform: $transform rotate(0deg);
     }
 
     50% {
-        transform: $transform rotate(-45deg) scale(2);
+        transform: $transform rotate(-45deg);
     }
 
     100% {
-        transform: $transform rotate(0deg) scale(2);
+        transform: $transform rotate(0deg);
     }
 }
 
