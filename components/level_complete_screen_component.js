@@ -47,13 +47,27 @@ let getLevelHeader = levelNumberWord => {
     );
 };
 
-let listLevels = levelNumber =>
-    _.map(levelNames, (name, number) =>
-        <div className={levelNumber > number ? 'complete' : ''}>
-            <p>Level {number + 1}</p>
-            <p>{name}</p>
-        </div>
-    );
+let listLevels = levelNumber => _.map(levelNames, (name, number) =>
+    <div className={levelNumber > number ? 'complete' : ''}>
+        <p>Level {number + 1}</p>
+        <p>{name}</p>
+    </div>
+);
+
+let onMouseOver = function () {
+    console.log('onMouseOver');
+    skoash.trigger('updateScreenData', {
+        key: 'play',
+        data: 'hover',
+    });
+};
+
+let onPlay = function () {
+    this.updateScreenData({
+        key: 'play',
+        data: null,
+    });
+};
 
 export default function (levelNumber) {
     let levelNumberWord = numberWords[levelNumber - 1];
@@ -89,14 +103,22 @@ export default function (levelNumber) {
                     />
                     <skoash.Audio
                         type="sfx"
-                        src={`${CMWN.MEDIA.EFFECT}FlipHover.mp3`}
-                    />
-                    <skoash.Audio
-                        type="sfx"
                         playTarget="appear"
                         src={`${CMWN.MEDIA.EFFECT}FlipDropBounce.mp3`}
                     />
                 </skoash.MediaSequence>
+                <skoash.MediaCollection
+                    play={_.get(props, 'data.play')}
+                    onPlay={onPlay}
+                    complete
+                >
+                    <skoash.Audio
+                        type="sfx"
+                        ref="hover"
+                        completeTarget="hover"
+                        src={`${CMWN.MEDIA.EFFECT}FlipHover.mp3`}
+                    />
+                </skoash.MediaCollection>
                 <div className="frame" >
                     {getLevelHeader(levelNumberWord)}
                     {listLevels(levelNumber)}
@@ -105,6 +127,7 @@ export default function (levelNumber) {
                     className={SPARKEL}
                     onStart={onStart}
                     onStop={onStop}
+                    onMouseOver={onMouseOver}
                 />
             </skoash.Screen>
         );
