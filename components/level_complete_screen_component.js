@@ -55,7 +55,6 @@ let listLevels = levelNumber => _.map(levelNames, (name, number) =>
 );
 
 let onMouseOver = function () {
-    console.log('onMouseOver');
     skoash.trigger('updateScreenData', {
         key: 'play',
         data: 'hover',
