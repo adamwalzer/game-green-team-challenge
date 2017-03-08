@@ -22,11 +22,16 @@
                 left: 0;
                 transition: top .25s .25s, left .25s 0s, transform .5s;
 
-                $lefts: 400 150 -100;
+                $lefts:  400 150 -100;
+                $scales: .75  .5   .5;
                 @for $i from 1 through length($lefts) {
                     &:nth-of-type(#{$i}) {
                         transform: translateX(#{nth($lefts, $i)}px) translateY(-50%);
                         transform-origin: 0 0;
+
+                        .sprite {
+                            transform: translateX(-50%) translateY(-50%) scale(#{nth($scales, $i)});
+                        }
                     }
                 }
 
@@ -34,6 +39,11 @@
                     top: 200px;
                     left: 130px;
                     transition: top .25s 2.6s, left 1.4s 2s, transform .5s;
+
+                    .sprite {
+                        transform: translateX(-50%) translateY(-50%) scale(.5);
+                        transition: transform .5s;
+                    }
                 }
 
                 &.PICKUP {
@@ -129,31 +139,23 @@
     }
 
     .extras {
-        .claw {
+        .fantastic-claw {
             @include position(absolute, -180px null null 70px);
             transform: scale(.3);
         }
 
-        .belt {
+        .fantastic-belt {
             @include position(absolute, 30px null null -250px);
             transform: scale(.5);
+            z-index: -1;
         }
 
         .funnel {
-            @include position(absolute, 80px null null 190px);
+            @include position(absolute, -80px null null 190px);
+            transform: scale(.2);
 
-            .back,
-            .front {
-                transform: scale(.2);
-            }
-
-            .back {
-                @include position(absolute, 0 null null 0);
+            &.back {
                 z-index: -1;
-            }
-
-            .front {
-                @include position(absolute, -107px null null 80px);
             }
         }
 

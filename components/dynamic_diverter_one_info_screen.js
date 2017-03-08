@@ -3,7 +3,7 @@ import InfoScreenComponent from './info_screen_component';
 export default function (props, ref, key) {
     return InfoScreenComponent(props, ref, key, {
         id: 'dynamic-diverter-one-info',
-        className: 'exhaust',
+        className: 'exhaust small',
         content: (
             <skoash.Component>
                 <p>
@@ -14,10 +14,7 @@ export default function (props, ref, key) {
                     that should not be in<br/>
                     the bin to be resorted.
                 </p>
-                <skoash.Sprite
-                    src={`${CMWN.MEDIA.SPRITE}_compost`}
-                    frame={0}
-                />
+                <div className="compost-item frame-0" />
             </skoash.Component>
         ),
         vo: 'DragToBin',

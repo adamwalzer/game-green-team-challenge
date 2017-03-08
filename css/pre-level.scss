@@ -34,8 +34,8 @@
         @include background('#{$image}luggage.png');
         @include center;
         top: 61%;
-        transform: translateX(-1500px) translateY(-50%);
-        transition: transform 1s;
+        transform: translateX(-1200px) translateY(-50%);
+        transition: transform 1.5s linear;
         padding-top: 210px;
         width: 500px;
         height: 540px;
