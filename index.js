@@ -66,30 +66,32 @@ import MasterSorter5Screen from './components/master_sorter_level_five_screen';
 import NowAMemberScreen from './components/now_a_member_screen';
 import QuitScreen from './components/quit_screen';
 
-import ItemsToSort from './components/items_to_sort';
+// import ItemsToSort from './components/items_to_sort';
 
-let audioRefs = _.uniq(_.map(ItemsToSort, v =>
-    _.kebabCase(_.replace(v.name, /\d+/g, '')))
-);
+// let audioRefs = _.uniq(_.map(ItemsToSort, v =>
+//     _.kebabCase(_.replace(v.name, /\d+/g, '')))
+// );
 
-let audioArray = _.map(audioRefs, (v, k) => {
-    return {
-        type: skoash.Audio,
-        ref: v,
-        key: k,
-        props: {
-            type: 'voiceOver',
-            src: `${CMWN.MEDIA.GAME + 'sound-assets/_vositems/' + v}.mp3`,
-            checkReady: false,
-            onPlay: function () {
-                this.updateScreenData({
-                    keys: ['item', 'new'],
-                    data: false,
-                });
-            }
-        },
-    };
-});
+// let audioArray = _.map(audioRefs, (v, k) => {
+//     return {
+//         type: skoash.Audio,
+//         ref: v,
+//         key: k,
+//         props: {
+//             type: 'voiceOver',
+//             src: `${CMWN.MEDIA.GAME + 'sound-assets/_vositems/' + v}.mp3`,
+//             checkReady: false,
+//             onPlay: function () {
+//                 this.updateScreenData({
+//                     keys: ['item', 'new'],
+//                     data: false,
+//                 });
+//             }
+//         },
+//     };
+// });
+
+let audioArray = [];
 
 skoash.start(
     <skoash.Game
@@ -312,6 +314,7 @@ skoash.start(
                 src={`${MEDIA.EFFECT}NextAppear.mp3`}
                 volume={3}
             />,
+            /*
             <skoash.Audio ref="BKG0" type="background" src={`${CMWN.MEDIA.EFFECT}titlescreen.mp3`} loop />,
             <skoash.Audio ref="BKG1" type="background" src={`${CMWN.MEDIA.EFFECT}BKG1.mp3`} loop />,
             <skoash.Audio ref="BKG2" type="background" src={`${CMWN.MEDIA.EFFECT}BKG2.mp3`} loop />,
@@ -319,6 +322,7 @@ skoash.start(
             <skoash.Audio ref="BKG4" type="background" src={`${CMWN.MEDIA.EFFECT}BKG4.mp3`} loop />,
             <skoash.Audio ref="BKG5" type="background" src={`${CMWN.MEDIA.EFFECT}BKG5.mp3`} loop />,
             <skoash.Audio ref="BKG6" type="background" src={`${CMWN.MEDIA.EFFECT}BKG6.mp3`} loop />,
+            */
             <div className="background title" />,
             <div className="background bkg1" />,
             <div className="background bkg2" />,
