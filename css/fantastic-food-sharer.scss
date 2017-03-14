@@ -1,7 +1,7 @@
 @import 'variables';
 @import 'mixins';
 
-[id*=fantastic-food-sharer] {
+[id*=fantastic-food-sharer-] {
     @include game-gages;
     @include game-reveal;
 

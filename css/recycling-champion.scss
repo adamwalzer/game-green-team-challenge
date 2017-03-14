@@ -1,7 +1,7 @@
 @import 'variables';
 @import 'mixins';
 
-[id*=recycling-champion] {
+[id*=recycling-champion-] {
     @include game-gages;
     @include game-reveal;
 

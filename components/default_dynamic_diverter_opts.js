@@ -45,6 +45,12 @@ export default _.defaults({
                     rotate: _.random(-30, 30),
                 });
             },
+            onDrag: function () {
+                skoash.trigger(
+                    'playMedia',
+                    {ref: _.kebabCase(_.replace(this.props.className, /\d+/g, ''))}
+                );
+            },
         };
     },
     getDropzoneProps(opts) {

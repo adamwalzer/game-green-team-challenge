@@ -1,7 +1,7 @@
 @import 'variables';
 @import 'mixins';
 
-[id*=dynamic-diverter] {
+[id*=dynamic-diverter-] {
     @include game-gages;
     @include game-reveal;
 

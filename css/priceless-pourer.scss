@@ -1,7 +1,7 @@
 @import 'variables';
 @import 'mixins';
 
-[id*=priceless-pourer] {
+[id*=priceless-pourer-] {
     @include game-gages;
     @include game-reveal;
 
