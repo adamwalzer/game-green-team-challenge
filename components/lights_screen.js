@@ -1,5 +1,3 @@
-import itemLandfill from './items_landfill';
-
 let binNames = [
     'recycle',
     'landfill',
