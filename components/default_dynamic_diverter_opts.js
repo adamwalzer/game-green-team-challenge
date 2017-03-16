@@ -50,11 +50,6 @@ export default _.defaults({
                     'playMedia',
                     {ref: _.kebabCase(_.replace(this.props.className, /\d+/g, ''))}
                 );
-                // this.updateGameData({
-                //     data: {
-                //         itemRef: _.kebabCase(_.replace(this.props.className, /\d+/g, '')),
-                //     },
-                // });
             },
         };
     },
