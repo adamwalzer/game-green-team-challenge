@@ -129,47 +129,47 @@ export default _.defaults({
                     if (DOMNode !== e.target) return;
 
                     if (itemRef.props.message === 'liquids') {
-                        onAnimationEnd = () => {
-                            this.pickUp(_.defaults({
-                                onPickUp: function () {
-                                    let items = this.state.items;
-                                    let index = this.firstItemIndex;
-                                    let item = items[index];
-                                    item.props.className = item.props.becomes.name;
-                                    item.props.message = item.props.becomes.bin;
-                                    item.props['data-message'] = item.props.becomes.bin;
-                                    items[index] = item;
-                                    this.setState({items}, () => {
-                                        this.getFirstItem().removeAllClassNames();
-                                        this.updateScreenData({
-                                            keys: [this.props.refsTarget, 'refs'],
-                                            data: _.filter(this.refs, (v, k) => !k.indexOf(ITEMS)),
-                                        });
-                                    });
-                                    skoash.trigger(
-                                        'playMedia',
-                                        {ref: _.kebabCase(_.replace(item.props.becomes.name, /\d+/g, ''))}
-                                    );
-                                    this.updateScreenData({
-                                        data: {
-                                            item: {
-                                                name: _.startCase(
-                                                    _.replace(item.props.becomes.name, /\d+/g, '')
-                                                ),
-                                                pour: false,
-                                            },
-                                            'manual-dropper': {
-                                                dropClass: '',
-                                            },
-                                            truckClassName: '',
-                                        }
-                                    });
-                                    DOMNode.removeEventListener('animationend', onAnimationEnd);
-                                }
-                            }, this.props));
-                        };
-
                         if (!itemRef.state.className || !_.includes(itemRef.state.className, 'POUR')) {
+                            onAnimationEnd = () => {
+                                this.pickUp(_.defaults({
+                                    onPickUp: function () {
+                                        let items = this.state.items;
+                                        let index = this.firstItemIndex;
+                                        let item = items[index];
+                                        item.props.className = item.props.becomes.name;
+                                        item.props.message = item.props.becomes.bin;
+                                        item.props['data-message'] = item.props.becomes.bin;
+                                        items[index] = item;
+                                        this.setState({items}, () => {
+                                            this.getFirstItem().removeAllClassNames();
+                                            this.updateScreenData({
+                                                keys: [this.props.refsTarget, 'refs'],
+                                                data: _.filter(this.refs, (v, k) => !k.indexOf(ITEMS)),
+                                            });
+                                        });
+                                        skoash.trigger(
+                                            'playMedia',
+                                            {ref: _.kebabCase(_.replace(item.props.becomes.name, /\d+/g, ''))}
+                                        );
+                                        this.updateScreenData({
+                                            data: {
+                                                item: {
+                                                    name: _.startCase(
+                                                        _.replace(item.props.becomes.name, /\d+/g, '')
+                                                    ),
+                                                    pour: false,
+                                                },
+                                                'manual-dropper': {
+                                                    dropClass: '',
+                                                },
+                                                truckClassName: '',
+                                            }
+                                        });
+                                        DOMNode.removeEventListener('animationend', onAnimationEnd);
+                                    }
+                                }, this.props));
+                            };
+
                             DOMNode.addEventListener('animationend', onAnimationEnd);
                             itemRef.addClassName('POUR');
                             this.updateScreenData({

@@ -55,6 +55,20 @@ export default _.defaults({
     },
     getDropzoneProps(opts) {
         return {
+            onStart: function () {
+                this.closeRevealCallback = () => {
+                    setTimeout(() => {
+                        this.updateScreenData({
+                            data: {
+                                reveal: {
+                                    open: null,
+                                    close: true,
+                                },
+                            }
+                        });
+                    }, 1000);
+                };
+            },
             onCorrect: function (draggable) {
                 let score = opts.score + opts.pointsPerItem;
 
@@ -79,18 +93,7 @@ export default _.defaults({
                                 open: 'next',
                             },
                         },
-                        callback: () => {
-                            setTimeout(() => {
-                                this.updateScreenData({
-                                    data: {
-                                        reveal: {
-                                            open: null,
-                                            close: true,
-                                        },
-                                    }
-                                });
-                            }, 1000);
-                        }
+                        callback: this.closeRevealCallback
                     });
                 }
             },
@@ -105,18 +108,7 @@ export default _.defaults({
                 this.updateScreenData({
                     keys: ['reveal', 'open'],
                     data: 'resort',
-                    callback: () => {
-                        setTimeout(() => {
-                            this.updateScreenData({
-                                data: {
-                                    reveal: {
-                                        open: null,
-                                        close: true,
-                                    },
-                                }
-                            });
-                        }, 1000);
-                    }
+                    callback: this.closeRevealCallback
                 });
 
                 this.updateGameData({
