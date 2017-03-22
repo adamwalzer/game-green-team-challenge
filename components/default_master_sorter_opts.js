@@ -103,6 +103,43 @@ export default _.defaults({
                         }
                     });
                 };
+
+                this.liquidCallback = () => {
+                    let tray = this.getFirstItem();
+                    tray.refs['children-0'].setState({classes: {}});
+                    this.updateScreenData({
+                        key: 'item',
+                        data: {
+                            name: null,
+                            ref: null,
+                            className: null,
+                            pour: false,
+                        }
+                    });
+                };
+
+                this.caughtCallback = () => {
+                    this.updateScreenData({
+                        key: 'item',
+                        data: {
+                            name: null,
+                            ref: null,
+                            className: null,
+                        },
+                        callback: this.newItemCallback,
+                    });
+                };
+
+                this.newItemCallback = () => {
+                    if (!this.amountLeft) {
+                        this.updateScreenData({
+                            key: 'manual-dropper',
+                            data: {
+                                selectItem: true,
+                            },
+                        });
+                    }
+                };
             },
             onTransitionEnd: function (e) {
                 let tray = this.getFirstItem();
@@ -165,6 +202,7 @@ export default _.defaults({
 
                 if (opts.itemClassName !== 'LIQUIDS' && this.props.dropClass !== 'LIQUIDS') {
                     let amount = opts.itemAmount - 1;
+                    this.amountLeft = amount;
 
                     this.updateGameData({
                         keys: [_.camelCase(opts.gameName), 'levels', opts.level, 'score'],
@@ -177,26 +215,7 @@ export default _.defaults({
                             className: 'CAUGHT',
                             amount,
                         },
-                        callback: () => {
-                            this.updateScreenData({
-                                key: 'item',
-                                data: {
-                                    name: null,
-                                    ref: null,
-                                    className: null,
-                                },
-                                callback: () => {
-                                    if (!amount) {
-                                        this.updateScreenData({
-                                            key: 'manual-dropper',
-                                            data: {
-                                                selectItem: true,
-                                            },
-                                        });
-                                    }
-                                }
-                            });
-                        }
+                        callback: this.caughtCallback,
                     });
 
                     if (!opts.itemClassName) this.next();
@@ -215,9 +234,7 @@ export default _.defaults({
                         selectedItem.props.message = selectedItem.props.becomes.bin;
                         selectedItem.props['data-message'] = selectedItem.props.becomes.bin;
                         items[index] = item;
-                        this.setState({items}, () => {
-                            this.afterNext();
-                        });
+                        this.setState({items}, this.afterNext);
 
                         skoash.trigger(
                             'playMedia',
@@ -236,18 +253,7 @@ export default _.defaults({
                                 className: null,
                                 amount: opts.itemAmount - 1,
                             },
-                            callback: () => {
-                                tray.refs['children-0'].setState({classes: {}});
-                                this.updateScreenData({
-                                    key: 'item',
-                                    data: {
-                                        name: null,
-                                        ref: null,
-                                        className: null,
-                                        pour: false,
-                                    }
-                                });
-                            }
+                            callback: this.liquidCallback,
                         });
 
                         DOMNode.removeEventListener('animationend', onAnimationEnd);
