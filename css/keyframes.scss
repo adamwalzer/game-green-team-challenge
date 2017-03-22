@@ -74,3 +74,32 @@ $master-transform: translateX(-50%) translateY(-50%);
         transform: $master-transform rotate(0deg);
     }
 }
+
+@for $i from 1 through 12 {
+    $timing: (13 - $i) * 1.5;
+    $x: (($i * 48) % 560);
+    $y: 80 + (($i * 36) % 250);
+    $deg: -30 + (($i * 8) % 60);
+
+    @keyframes tray-#{$i} {
+        0% {
+            transform: translateX(50%) translateY(-200px) rotate(0deg) scale(.65);
+        }
+
+        #{percentage((25 - $timing) / 100)} {
+            transform: translateX(#{$x}px) translateY(#{$y}px) rotate(#{$deg}deg) scale(.65);
+        }
+
+        #{percentage((60 + $timing) / 100)} {
+            transform: translateX(#{$x}px) translateY(#{$y}px) rotate(#{$deg}deg) scale(.65);
+        }
+
+        #{percentage((70 + $timing) / 100)} {
+            transform: translateX(#{$x}px) translateY(600px) rotate(0deg) scale(.65);
+        }
+
+        100% {
+            transform: translateX(#{$x}px) translateY(600px) rotate(0deg) scale(.65);
+        }
+    }
+}

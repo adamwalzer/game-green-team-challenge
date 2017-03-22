@@ -1,6 +1,60 @@
+@import 'mixins';
+@import 'variables';
+
 #video {
-    video {
-        margin-left: -5%;
-        width: 110%;
+    .frame {
+        @include cover;
+        opacity: 0;
+        z-index: 1;
+
+        p {
+            position: absolute;
+            top: 50px;
+            left: 0;
+            transform: translateX(100%);
+            transition: transform .5s .25s;
+            z-index: 1;
+            width: 100%;
+            text-shadow: none;
+            color: $black;
+        }
+
+        .lunch-tray {
+            position: absolute;
+            top: 0;
+            left: 0;
+            animation-duration: 5s;
+            animation-timing-function: linear;
+            animation-fill-mode: forwards;
+        }
+
+        img {
+            @include cover;
+        }
+
+        .crash {
+            transition: opacity .5s 3s;
+            opacity: 0;
+        }
+
+        &.SHOW {
+            opacity: 1;
+
+            p {
+                transform: translateX(0);
+            }
+
+            .lunch-tray {
+                @for $i from 1 through 12 {
+                    &:nth-of-type(#{$i}) {
+                        animation-name: tray-#{$i};
+                    }
+                }
+            }
+
+            .crash {
+                opacity: 1;
+            }
+        }
     }
 }
