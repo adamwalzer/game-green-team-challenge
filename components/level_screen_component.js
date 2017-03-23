@@ -16,6 +16,16 @@ let levelNames = [
     <p>Master<br/>Sorter</p>,
 ];
 
+let allEarnedHelper = v => v.className;
+let getStarMapHelper = (data, level) => (
+    <skoash.Audio
+        playTarget={['earned', level]}
+        type="sfx"
+        src={`${CMWN.MEDIA.EFFECT}GetStar.mp3`}
+        volume={data.complete ? 1 : 0}
+    />
+);
+
 export default function (levelNumber) {
     let levelInt = _.floor(levelNumber);
     let levelKey = levelKeys[levelInt - 1];
@@ -26,7 +36,7 @@ export default function (levelNumber) {
         let repeaterProps = _.map(_.get(props, 'data.earned'), (level, index) =>
             ({className: level.playing && _.get(levelData, `${index}.complete`) ? 'earned' : ''})
         );
-        let allEarned = repeaterProps.length === 5 && _.every(repeaterProps, v => v.className);
+        let allEarned = repeaterProps.length === 5 && _.every(repeaterProps, allEarnedHelper);
 
         return (
             <skoash.Screen
@@ -55,16 +65,7 @@ export default function (levelNumber) {
                             type="sfx"
                             src={`${CMWN.MEDIA.EFFECT}LevelComplete.mp3`}
                         />,
-                    ].concat(
-                        _.map(levelData, (data, level) =>
-                            <skoash.Audio
-                                playTarget={['earned', level]}
-                                type="sfx"
-                                src={`${CMWN.MEDIA.EFFECT}GetStar.mp3`}
-                                volume={data.complete ? 1 : 0}
-                            />
-                        )
-                    )}
+                    ].concat(_.map(levelData, getStarMapHelper))}
                 />
                 <skoash.Image className="hidden" src={`${CMWN.MEDIA.IMAGE}purple.ribbon.png`} />
                 <skoash.Image className="hidden" src={`${CMWN.MEDIA.IMAGE}luggage.png`} />

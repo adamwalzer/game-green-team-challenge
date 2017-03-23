@@ -82,7 +82,7 @@ let audioArray = [
 ];
 
 let onAnimationComplete = function () {
-    setTimeout(() => this.setState({frame: this.props.frame}), 500);
+    this.setState({frame: this.props.frame});
 };
 
 let onAnimationClawComplete = function () {
@@ -92,6 +92,8 @@ let onAnimationClawComplete = function () {
         data: false,
     });
 };
+
+let filterHelper = (v, k) => !k.indexOf(ITEMS);
 
 export default _.defaults({
     gameName: 'fantastic-food-sharer',
@@ -116,6 +118,43 @@ export default _.defaults({
     },
     getDropperProps(opts) {
         return {
+            onStart() {
+                this.afterSetItems = () => {
+                    this.getFirstItem().removeAllClassNames();
+                    this.updateScreenData({
+                        keys: [this.props.refsTarget, 'refs'],
+                        data: _.filter(this.refs, filterHelper),
+                    });
+                };
+
+                this.onMaxHits = () => {
+                    this.updateScreenData({
+                        keys: ['manual-dropper', 'pickUp'],
+                        data: true,
+                    });
+                };
+
+                this.resortCallbackHelper = () => {
+                    this.updateScreenData({
+                        data: {
+                            reveal: {
+                                open: null,
+                                close: true,
+                            },
+                            'manual-dropper': {
+                                pickUp: true,
+                            },
+                            catcher: {
+                                caught: false,
+                            }
+                        }
+                    });
+                };
+
+                this.resortCallback = () => {
+                    setTimeout(this.resortCallbackHelper, 1000);
+                };
+            },
             onTransitionEnd: function (e) {
                 if (e.propertyName === 'top' && _.includes(e.target.className, DROPPED)) {
                     let itemRef = this.refs[ITEMS + this.firstItemIndex];
@@ -140,13 +179,7 @@ export default _.defaults({
                                         item.props.message = item.props.becomes.bin;
                                         item.props['data-message'] = item.props.becomes.bin;
                                         items[index] = item;
-                                        this.setState({items}, () => {
-                                            this.getFirstItem().removeAllClassNames();
-                                            this.updateScreenData({
-                                                keys: [this.props.refsTarget, 'refs'],
-                                                data: _.filter(this.refs, (v, k) => !k.indexOf(ITEMS)),
-                                            });
-                                        });
+                                        this.setState({items}, this.afterSetItems);
                                         skoash.trigger(
                                             'playMedia',
                                             {ref: _.kebabCase(_.replace(item.props.becomes.name, /\d+/g, ''))}
@@ -195,36 +228,14 @@ export default _.defaults({
                         });
 
                         if (hits === opts.maxHits) {
-                            setTimeout(() => {
-                                this.updateScreenData({
-                                    keys: ['manual-dropper', 'pickUp'],
-                                    data: true,
-                                });
-                            }, 1000);
+                            setTimeout(this.onMaxHits, 1000);
                             return;
                         }
 
                         this.updateScreenData({
                             keys: ['reveal', 'open'],
                             data: 'resort',
-                            callback: () => {
-                                setTimeout(() => {
-                                    this.updateScreenData({
-                                        data: {
-                                            reveal: {
-                                                open: null,
-                                                close: true,
-                                            },
-                                            'manual-dropper': {
-                                                pickUp: true,
-                                            },
-                                            catcher: {
-                                                caught: false,
-                                            }
-                                        }
-                                    });
-                                }, 1000);
-                            }
+                            callback: this.resortCallback,
                         });
 
                         return;
