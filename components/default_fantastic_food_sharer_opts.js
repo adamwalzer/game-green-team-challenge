@@ -82,7 +82,7 @@ let audioArray = [
 ];
 
 let onAnimationComplete = function () {
-    this.setState({frame: this.props.frame});
+    setTimeout(() => this.setState({frame: this.props.frame}), 500);
 };
 
 let onAnimationClawComplete = function () {
