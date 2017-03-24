@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import Catchable from 'shared/components/catchable/0.2';
 
 import defaultGameOpts from './default_game_opts';
-import ItemsToSort from './items_to_sort';
+import itemsToSort from './fantastic_items_to_sort';
 
 const PICKUP = 'PICKUP';
 const DROPPED = 'DROPPED';
@@ -44,11 +44,6 @@ const onItemPickUpTransitionEnd = function (itemRef) {
     }
 };
 
-let itemsToSort = _.filter(
-    ItemsToSort,
-    item => _.includes(binNames, item.bin)
-);
-
 let getChildren = v => {
     if (v.children) return v.children;
 
@@ -70,7 +65,7 @@ let catchablesArray = _.map(itemsToSort, v => ({
 
 let audioArray = [
     <skoash.MediaSequence ref="drop" silentOnStart>
-        <skoash.Audio delay={2600} type="sfx" src={`${CMWN.MEDIA.EFFECT}ItemFunnel.mp3`} />
+        <skoash.Audio delay={600} type="sfx" src={`${CMWN.MEDIA.EFFECT}ItemFunnel.mp3`} />
         <skoash.Audio type="sfx" src={`${CMWN.MEDIA.EFFECT}TruckDump.mp3`} />
     </skoash.MediaSequence>,
     <skoash.Audio ref="correct" type="sfx" src={`${CMWN.MEDIA.EFFECT}ConveyorBelt.mp3`} />,
@@ -83,14 +78,6 @@ let audioArray = [
 
 let onAnimationComplete = function () {
     setTimeout(() => this.setState({frame: this.props.frame}), 500);
-};
-
-let onAnimationClawComplete = function () {
-    this.setState({frame: this.props.frame});
-    this.updateScreenData({
-        key: 'moveClaw',
-        data: false,
-    });
 };
 
 let filterHelper = (v, k) => !k.indexOf(ITEMS);
@@ -327,17 +314,6 @@ export default _.defaults({
                 <skoash.Image
                     className="hidden"
                     src={TRUCK_SRC}
-                />
-                <skoash.Animation
-                    className="fantastic-claw"
-                    frames={_.get(opts.props, 'gameState.data.fantastic-claw.frames.length', 1)}
-                    frame={0}
-                    loop={false}
-                    duration={[
-                        200, 200, 200, 500, 100, 1000, 200, 200, 200, 200, 200, 200
-                    ]}
-                    animate={opts.moveClaw}
-                    onComplete={onAnimationClawComplete}
                 />
                 <skoash.Animation
                     className="fantastic-belt"
