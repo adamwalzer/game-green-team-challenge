@@ -1,13 +1,5 @@
 import classNames from 'classnames';
 
-let levelKeys = [
-    'recyclingChampion',
-    'pricelessPourer',
-    'fantasticFoodSharer',
-    'dynamicDiverter',
-    'masterSorter',
-];
-
 let levelNames = [
     <p>Recycling<br/>Champion</p>,
     <p>Priceless<br/>Pourer</p>,
@@ -17,24 +9,22 @@ let levelNames = [
 ];
 
 let allEarnedHelper = v => v.className;
-let getStarMapHelper = (data, level) => (
+let getStarMapHelper = level => (
     <skoash.Audio
-        playTarget={['earned', level]}
+        playTarget={['earned', level + 1]}
         type="sfx"
         src={`${CMWN.MEDIA.EFFECT}GetStar.mp3`}
-        volume={data.complete ? 1 : 0}
     />
 );
 
 export default function (levelNumber) {
     let levelInt = _.floor(levelNumber);
-    let levelKey = levelKeys[levelInt - 1];
+    let starNum = _.round((levelNumber - levelInt) * 10);
     let levelName = levelNames[levelInt - 1];
 
     return function (props, ref, key, opts = {}) {
-        let levelData = _.get(props, `gameState.data.${levelKey}.levels`, {});
-        let repeaterProps = _.map(_.get(props, 'data.earned'), (level, index) =>
-            ({className: level.playing && _.get(levelData, `${index}.complete`) ? 'earned' : ''})
+        let repeaterProps = _.map(_.get(props, 'data.earned'), level =>
+            ({className: level.playing ? 'earned' : ''})
         );
         let allEarned = repeaterProps.length === 5 && _.every(repeaterProps, allEarnedHelper);
 
@@ -65,7 +55,7 @@ export default function (levelNumber) {
                             type="sfx"
                             src={`${CMWN.MEDIA.EFFECT}LevelComplete.mp3`}
                         />,
-                    ].concat(_.map(levelData, getStarMapHelper))}
+                    ].concat(_.times(starNum, getStarMapHelper))}
                 />
                 <skoash.Image className="hidden" src={`${CMWN.MEDIA.IMAGE}purple.ribbon.png`} />
                 <skoash.Image className="hidden" src={`${CMWN.MEDIA.IMAGE}luggage.png`} />
