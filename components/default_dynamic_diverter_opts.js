@@ -74,6 +74,8 @@ export default _.defaults({
 
                 itemsToRemove--;
 
+                if (itemsToRemove < 0) return;
+
                 draggable.markCorrect();
 
                 this.updateGameData({
@@ -154,23 +156,23 @@ export default _.defaults({
             {
                 name: 'recycle',
                 objects: []
-                    .concat(shuffledItemsCompost.splice(0, 4))
+                    .concat(shuffledItemsRecycle.splice(0, 12))
                     .concat(shuffledItemsLandfill.splice(0, 4))
-                    .concat(shuffledItemsRecycle.splice(0, 12)),
+                    .concat(shuffledItemsCompost.splice(0, 4)),
             },
             {
                 name: 'landfill',
                 objects: []
-                    .concat(shuffledItemsCompost.splice(0, 4))
+                    .concat(shuffledItemsRecycle.splice(0, 4))
                     .concat(shuffledItemsLandfill.splice(0, 12))
-                    .concat(shuffledItemsRecycle.splice(0, 4)),
+                    .concat(shuffledItemsCompost.splice(0, 4)),
             },
             {
                 name: 'compost',
                 objects: []
-                    .concat(shuffledItemsCompost.splice(0, 12))
+                    .concat(shuffledItemsRecycle.splice(0, 4))
                     .concat(shuffledItemsLandfill.splice(0, 4))
-                    .concat(shuffledItemsRecycle.splice(0, 4)),
+                    .concat(shuffledItemsCompost.splice(0, 12)),
             },
         ];
     }

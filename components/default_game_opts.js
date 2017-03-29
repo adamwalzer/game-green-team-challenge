@@ -116,8 +116,8 @@ export default {
     },
     getRevealProps(opts) {
         return {
-            onOpen: function () {
-                if (opts.revealOpen === 'next') return;
+            onOpen: function (message) {
+                if (message === 'next') return;
                 this.updateGameData({
                     keys: [_.camelCase(opts.gameName), 'levels', opts.level, 'start'],
                     data: false,
