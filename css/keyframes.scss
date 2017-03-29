@@ -75,11 +75,21 @@ $master-transform: translateX(-50%) translateY(-50%);
     }
 }
 
-@for $i from 1 through 12 {
-    $timing: (13 - $i) * 1.5;
-    $x: (($i * 48) % 560);
-    $y: 80 + (($i * 36) % 250);
-    $deg: -30 + (($i * 8) % 60);
+$length: 12;
+$timing-interval: 1.5;
+$x-interval: 48;
+$x-max: 560;
+$y-start: 80;
+$y-interval: 36;
+$y-range: 250;
+$deg-start: -30;
+$deg-interval: 8;
+$deg-range: 60;
+@for $i from 1 through $length {
+    $timing: ($length + 1 - $i) * $timing-interval;
+    $x: (($i * $x-interval) % $x-max);
+    $y: $y-start + (($i * $y-interval) % $y-range);
+    $deg: $deg-start + (($i * $deg-interval) % $deg-range);
 
     @keyframes tray-#{$i} {
         0% {
