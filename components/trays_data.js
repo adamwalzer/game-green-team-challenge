@@ -317,7 +317,7 @@ export default [
         name: 'lunchbox',
         items: [
             'empty-plastic-bottle',
-            'soiled-paper-tray',
+            'soiled-paper-trays',
             'empty-cracker-wrapper-3',
             'sealed-applesauce',
         ],

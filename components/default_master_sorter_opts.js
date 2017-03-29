@@ -236,11 +236,6 @@ export default _.defaults({
                         items[index] = item;
                         this.setState({items}, this.afterNext);
 
-                        skoash.trigger(
-                            'playMedia',
-                            {ref: _.kebabCase(_.replace(selectedItem.props.becomes.name, /\d+/g, ''))}
-                        );
-
                         this.updateGameData({
                             keys: [_.camelCase(opts.gameName), 'levels', opts.level, 'score'],
                             data: opts.score + opts.pointsPerItem,
