@@ -12,15 +12,6 @@ let onStop = function () {
     delete this.effect;
 };
 
-let flipKeys = [
-    'recycling-champion',
-    'priceless-pourer',
-    'fantastic-food-sharer',
-    'dynamic-diverter',
-    'master-sorter',
-    'green-team-challenge',
-];
-
 let levelNames = [
     'Recycling Champion',
     'Priceless Pourer',
@@ -82,10 +73,6 @@ export default function (levelNumber) {
                     APPEAR: _.get(props, 'data.appear.playing'),
                 })}
                 backgroundAudio={`BKG${levelNumber}`}
-                emitOnComplete={{
-                    name: 'flip',
-                    game: flipKeys[levelNumber - 1]
-                }}
             >
                 <skoash.Image
                     className="hidden"

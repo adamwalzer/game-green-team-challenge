@@ -8,6 +8,15 @@ let levelNames = [
     <p>Master<br/>Sorter</p>,
 ];
 
+let flipKeys = [
+    'recycling-champion',
+    'priceless-pourer',
+    'fantastic-food-sharer',
+    'dynamic-diverter',
+    'master-sorter',
+    'green-team-challenge',
+];
+
 let allEarnedHelper = v => v.className;
 let getStarMapHelper = level => (
     <skoash.Audio
@@ -21,6 +30,14 @@ export default function (levelNumber) {
     let levelInt = _.floor(levelNumber);
     let starNum = _.round((levelNumber - levelInt) * 10);
     let levelName = levelNames[levelInt - 1];
+    let emitOnComplete;
+
+    if (starNum === 5) {
+        emitOnComplete = {
+            name: 'flip',
+            game: flipKeys[levelInt - 1]
+        };
+    }
 
     return function (props, ref, key, opts = {}) {
         let repeaterProps = _.map(_.get(props, 'data.earned'), level =>
@@ -39,6 +56,7 @@ export default function (levelNumber) {
                     ALL_EARNED: allEarned,
                     APPEAR: _.get(props, 'data.appear.playing'),
                 })}
+                emitOnComplete={emitOnComplete}
             >
                 <skoash.MediaSequence
                     children={[
