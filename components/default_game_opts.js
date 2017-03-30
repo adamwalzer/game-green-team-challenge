@@ -116,8 +116,8 @@ export default {
     },
     getRevealProps(opts) {
         return {
-            onOpen: function () {
-                if (!opts.revealOpen || opts.revealOpen === 'next') return;
+            onOpen: function (message) {
+                if (message === 'next') return;
                 this.updateGameData({
                     keys: [_.camelCase(opts.gameName), 'levels', opts.level, 'start'],
                     data: false,
@@ -169,6 +169,33 @@ export default {
     },
     getDropperProps(opts) {
         return {
+            onStart: function () {
+                this.closeRevealCallback = () => {
+                    setTimeout(() => {
+                        this.updateScreenData({
+                            data: {
+                                reveal: {
+                                    open: null,
+                                    close: true,
+                                },
+                                'manual-dropper': {
+                                    pickUp: true,
+                                },
+                                catcher: {
+                                    caught: false,
+                                }
+                            }
+                        });
+                    }, 1000);
+                };
+
+                this.pickUpCallback = () => {
+                    this.updateScreenData({
+                        keys: ['manual-dropper', 'pickUp'],
+                        data: true,
+                    });
+                };
+            },
             onTransitionEnd: function (e) {
                 let itemRef = this.refs['items-' + this.firstItemIndex];
                 let DOMNode;
@@ -203,36 +230,14 @@ export default {
                     });
 
                     if (hits === opts.maxHits) {
-                        setTimeout(() => {
-                            this.updateScreenData({
-                                keys: ['manual-dropper', 'pickUp'],
-                                data: true,
-                            });
-                        }, 1000);
+                        setTimeout(this.pickUpCallback, 1000);
                         return;
                     }
 
                     this.updateScreenData({
                         keys: ['reveal', 'open'],
                         data: 'resort',
-                        callback: () => {
-                            setTimeout(() => {
-                                this.updateScreenData({
-                                    data: {
-                                        reveal: {
-                                            open: null,
-                                            close: true,
-                                        },
-                                        'manual-dropper': {
-                                            pickUp: true,
-                                        },
-                                        catcher: {
-                                            caught: false,
-                                        }
-                                    }
-                                });
-                            }, 1000);
-                        }
+                        callback: this.closeRevealCallback,
                     });
 
                     return;
@@ -250,44 +255,44 @@ export default {
                     return;
                 }
 
-                onAnimationEnd = () => {
-                    this.pickUp(_.defaults({
-                        onPickUp: function () {
-                            let items = this.state.items;
-                            let index = this.firstItemIndex;
-                            let item = items[index];
-                            item.props.className = item.props.becomes.name;
-                            item.props.message = item.props.becomes.bin;
-                            item.props['data-message'] = item.props.becomes.bin;
-                            items[index] = item;
-                            this.setState({items}, () => {
-                                this.afterNext();
-                            });
-                            skoash.trigger(
-                                'playMedia',
-                                {ref: _.kebabCase(_.replace(item.props.becomes.name, /\d+/g, ''))}
-                            );
-                            this.updateScreenData({
-                                data: {
-                                    item: {
-                                        name: _.startCase(_.replace(item.props.becomes.name, /\d+/g, '')),
-                                        pour: false,
-                                    },
-                                    'manual-dropper': {
-                                        dropClass: '',
-                                    },
-                                }
-                            });
-                            this.updateGameData({
-                                keys: [_.camelCase(opts.gameName), 'levels', opts.level, 'score'],
-                                data: opts.score + opts.pointsPerItem,
-                            });
-                            DOMNode.removeEventListener('animationend', onAnimationEnd);
-                        }
-                    }, this.props));
-                };
-
                 if (!itemRef.state.className || itemRef.state.className.indexOf('POUR') === -1) {
+                    onAnimationEnd = () => {
+                        this.pickUp(_.defaults({
+                            onPickUp: function () {
+                                let items = this.state.items;
+                                let index = this.firstItemIndex;
+                                let item = items[index];
+                                item.props.className = item.props.becomes.name;
+                                item.props.message = item.props.becomes.bin;
+                                item.props['data-message'] = item.props.becomes.bin;
+                                items[index] = item;
+                                this.setState({items}, () => {
+                                    this.afterNext();
+                                });
+                                skoash.trigger(
+                                    'playMedia',
+                                    {ref: _.kebabCase(_.replace(item.props.becomes.name, /\d+/g, ''))}
+                                );
+                                this.updateScreenData({
+                                    data: {
+                                        item: {
+                                            name: _.startCase(_.replace(item.props.becomes.name, /\d+/g, '')),
+                                            pour: false,
+                                        },
+                                        'manual-dropper': {
+                                            dropClass: '',
+                                        },
+                                    }
+                                });
+                                this.updateGameData({
+                                    keys: [_.camelCase(opts.gameName), 'levels', opts.level, 'score'],
+                                    data: opts.score + opts.pointsPerItem,
+                                });
+                                DOMNode.removeEventListener('animationend', onAnimationEnd);
+                            }
+                        }, this.props));
+                    };
+
                     DOMNode.addEventListener('animationend', onAnimationEnd);
                     itemRef.addClassName('POUR');
                     this.updateScreenData({

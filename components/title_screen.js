@@ -3,6 +3,7 @@ import 'shared/effects/index';
 const FIREWORKS = 'fireworks';
 
 let onStart = function () {
+    if (this.props.mobile) return;
     this.effect = window.CMWN.makeEffect('fireworks', ReactDOM.findDOMNode(this), {
         backgroundImage: ReactDOM.findDOMNode(this.refs.image),
     });
@@ -45,6 +46,7 @@ export default function (props, ref, key) {
                 ref={FIREWORKS}
                 onStart={onStart}
                 onStop={onStop}
+                mobile={_.get(props, 'gameState.mobile', true)}
             >
                 <skoash.Image
                     ref="image"

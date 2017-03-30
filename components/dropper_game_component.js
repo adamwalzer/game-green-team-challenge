@@ -4,6 +4,14 @@ import ManualDropper from 'shared/components/manual_dropper/0.1';
 
 const PTS = 'pts';
 
+let binComponentsHelper = (name) => <skoash.Component className={name} message={name} />;
+let onPlay = function () {
+    this.updateScreenData({
+        key: 'play',
+        data: null,
+    });
+};
+
 export default function (props, ref, key, opts = {}) {
     if (Math.abs(props.gameState.currentScreenIndex - parseInt(key, 10)) > 2) {
         return (
@@ -28,9 +36,7 @@ export default function (props, ref, key, opts = {}) {
 
         let catchablesArray = opts.getCatchablesArray();
 
-        let binComponents = _.map(opts.binNames, name =>
-            <skoash.Component className={name} message={name} />
-        );
+        let binComponents = _.map(opts.binNames, binComponentsHelper);
 
         let scale = _.get(props, 'gameState.scale', 1);
         let start = _.get(props, `${LEVEL_PATH}.start`, false);
@@ -215,12 +221,7 @@ export default function (props, ref, key, opts = {}) {
                     checkComplete={false}
                     checkReady={false}
                     complete={true}
-                    onPlay={function () {
-                        this.updateScreenData({
-                            key: 'play',
-                            data: null,
-                        });
-                    }}
+                    onPlay={onPlay}
                 />
             </skoash.Screen>
         );

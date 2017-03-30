@@ -1,5 +1,3 @@
-import itemLandfill from './items_landfill';
-
 let binNames = [
     'recycle',
     'landfill',
@@ -86,20 +84,6 @@ let imageSrcs = [
     {src: `${CMWN.MEDIA.SPRITE}sprite.btn.png`},
 ];
 
-let audioRefs = _.uniq(_.map(itemLandfill, v =>
-    _.kebabCase(_.replace(v.name, /\d+/g, '')))
-);
-
-let arrayOfAudio = _.map(audioRefs, (v, k) =>
-    <skoash.Audio
-        type="voiceOver"
-        ref={v}
-        key={k}
-        src={`${CMWN.MEDIA.GAME + 'sound-assets/_vositems/' + v}.mp3`}
-        complete
-    />
-);
-
 export default function (props, ref, key) {
     return (
         <skoash.Screen
@@ -146,11 +130,6 @@ export default function (props, ref, key) {
                     />
                 </skoash.MediaSequence>
             </skoash.MediaCollection>
-            <skoash.Compoent
-                checkComplete={false}
-                complete={true}
-                children={[].concat(arrayOfAudio || [])}
-            />
         </skoash.Screen>
     );
 }

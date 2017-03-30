@@ -1,7 +1,7 @@
 @import 'variables';
 @import 'mixins';
 
-[id*=fantastic-food-sharer] {
+[id*=fantastic-food-sharer-] {
     @include game-gages;
     @include game-reveal;
 
@@ -38,7 +38,7 @@
                 &.DROPPED {
                     top: 200px;
                     left: 130px;
-                    transition: top .25s 2.6s, left 1.4s 2s, transform .5s;
+                    transition: top .25s .6s, left 1.4s, transform .5s;
 
                     .sprite {
                         transform: translateX(-50%) translateY(-50%) scale(.5);
@@ -139,11 +139,6 @@
     }
 
     .extras {
-        .fantastic-claw {
-            @include position(absolute, -180px null null 70px);
-            transform: scale(.3);
-        }
-
         .fantastic-belt {
             @include position(absolute, 30px null null -250px);
             transform: scale(.5);

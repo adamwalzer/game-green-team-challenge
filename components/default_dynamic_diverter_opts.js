@@ -45,14 +45,36 @@ export default _.defaults({
                     rotate: _.random(-30, 30),
                 });
             },
+            onDrag: function () {
+                skoash.trigger(
+                    'playMedia',
+                    {ref: _.kebabCase(_.replace(this.props.className, /\d+/g, ''))}
+                );
+            },
         };
     },
     getDropzoneProps(opts) {
         return {
+            onStart: function () {
+                this.closeRevealCallback = () => {
+                    setTimeout(() => {
+                        this.updateScreenData({
+                            data: {
+                                reveal: {
+                                    open: null,
+                                    close: true,
+                                },
+                            }
+                        });
+                    }, 1000);
+                };
+            },
             onCorrect: function (draggable) {
                 let score = opts.score + opts.pointsPerItem;
 
                 itemsToRemove--;
+
+                if (itemsToRemove < 0) return;
 
                 draggable.markCorrect();
 
@@ -73,18 +95,7 @@ export default _.defaults({
                                 open: 'next',
                             },
                         },
-                        callback: () => {
-                            setTimeout(() => {
-                                this.updateScreenData({
-                                    data: {
-                                        reveal: {
-                                            open: null,
-                                            close: true,
-                                        },
-                                    }
-                                });
-                            }, 1000);
-                        }
+                        callback: this.closeRevealCallback
                     });
                 }
             },
@@ -99,18 +110,7 @@ export default _.defaults({
                 this.updateScreenData({
                     keys: ['reveal', 'open'],
                     data: 'resort',
-                    callback: () => {
-                        setTimeout(() => {
-                            this.updateScreenData({
-                                data: {
-                                    reveal: {
-                                        open: null,
-                                        close: true,
-                                    },
-                                }
-                            });
-                        }, 1000);
-                    }
+                    callback: this.closeRevealCallback
                 });
 
                 this.updateGameData({
@@ -156,23 +156,23 @@ export default _.defaults({
             {
                 name: 'recycle',
                 objects: []
-                    .concat(shuffledItemsCompost.splice(0, 4))
+                    .concat(shuffledItemsRecycle.splice(0, 12))
                     .concat(shuffledItemsLandfill.splice(0, 4))
-                    .concat(shuffledItemsRecycle.splice(0, 12)),
+                    .concat(shuffledItemsCompost.splice(0, 4)),
             },
             {
                 name: 'landfill',
                 objects: []
-                    .concat(shuffledItemsCompost.splice(0, 4))
+                    .concat(shuffledItemsRecycle.splice(0, 4))
                     .concat(shuffledItemsLandfill.splice(0, 12))
-                    .concat(shuffledItemsRecycle.splice(0, 4)),
+                    .concat(shuffledItemsCompost.splice(0, 4)),
             },
             {
                 name: 'compost',
                 objects: []
-                    .concat(shuffledItemsCompost.splice(0, 12))
+                    .concat(shuffledItemsRecycle.splice(0, 4))
                     .concat(shuffledItemsLandfill.splice(0, 4))
-                    .concat(shuffledItemsRecycle.splice(0, 4)),
+                    .concat(shuffledItemsCompost.splice(0, 12)),
             },
         ];
     }

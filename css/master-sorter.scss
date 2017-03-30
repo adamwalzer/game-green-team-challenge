@@ -1,7 +1,7 @@
 @import 'variables';
 @import 'mixins';
 
-[id*=master-sorter] {
+[id*=master-sorter-] {
     @include game-gages;
     @include game-reveal;
 

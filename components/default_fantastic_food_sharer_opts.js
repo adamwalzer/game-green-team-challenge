@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import Catchable from 'shared/components/catchable/0.2';
 
 import defaultGameOpts from './default_game_opts';
-import ItemsToSort from './items_to_sort';
+import itemsToSort from './fantastic_items_to_sort';
 
 const PICKUP = 'PICKUP';
 const DROPPED = 'DROPPED';
@@ -44,11 +44,6 @@ const onItemPickUpTransitionEnd = function (itemRef) {
     }
 };
 
-let itemsToSort = _.filter(
-    ItemsToSort,
-    item => _.includes(binNames, item.bin)
-);
-
 let getChildren = v => {
     if (v.children) return v.children;
 
@@ -70,7 +65,7 @@ let catchablesArray = _.map(itemsToSort, v => ({
 
 let audioArray = [
     <skoash.MediaSequence ref="drop" silentOnStart>
-        <skoash.Audio delay={2600} type="sfx" src={`${CMWN.MEDIA.EFFECT}ItemFunnel.mp3`} />
+        <skoash.Audio delay={600} type="sfx" src={`${CMWN.MEDIA.EFFECT}ItemFunnel.mp3`} />
         <skoash.Audio type="sfx" src={`${CMWN.MEDIA.EFFECT}TruckDump.mp3`} />
     </skoash.MediaSequence>,
     <skoash.Audio ref="correct" type="sfx" src={`${CMWN.MEDIA.EFFECT}ConveyorBelt.mp3`} />,
@@ -85,13 +80,7 @@ let onAnimationComplete = function () {
     setTimeout(() => this.setState({frame: this.props.frame}), 500);
 };
 
-let onAnimationClawComplete = function () {
-    this.setState({frame: this.props.frame});
-    this.updateScreenData({
-        key: 'moveClaw',
-        data: false,
-    });
-};
+let filterHelper = (v, k) => !k.indexOf(ITEMS);
 
 export default _.defaults({
     gameName: 'fantastic-food-sharer',
@@ -116,6 +105,43 @@ export default _.defaults({
     },
     getDropperProps(opts) {
         return {
+            onStart() {
+                this.afterSetItems = () => {
+                    this.getFirstItem().removeAllClassNames();
+                    this.updateScreenData({
+                        keys: [this.props.refsTarget, 'refs'],
+                        data: _.filter(this.refs, filterHelper),
+                    });
+                };
+
+                this.onMaxHits = () => {
+                    this.updateScreenData({
+                        keys: ['manual-dropper', 'pickUp'],
+                        data: true,
+                    });
+                };
+
+                this.resortCallbackHelper = () => {
+                    this.updateScreenData({
+                        data: {
+                            reveal: {
+                                open: null,
+                                close: true,
+                            },
+                            'manual-dropper': {
+                                pickUp: true,
+                            },
+                            catcher: {
+                                caught: false,
+                            }
+                        }
+                    });
+                };
+
+                this.resortCallback = () => {
+                    setTimeout(this.resortCallbackHelper, 1000);
+                };
+            },
             onTransitionEnd: function (e) {
                 if (e.propertyName === 'top' && _.includes(e.target.className, DROPPED)) {
                     let itemRef = this.refs[ITEMS + this.firstItemIndex];
@@ -129,47 +155,41 @@ export default _.defaults({
                     if (DOMNode !== e.target) return;
 
                     if (itemRef.props.message === 'liquids') {
-                        onAnimationEnd = () => {
-                            this.pickUp(_.defaults({
-                                onPickUp: function () {
-                                    let items = this.state.items;
-                                    let index = this.firstItemIndex;
-                                    let item = items[index];
-                                    item.props.className = item.props.becomes.name;
-                                    item.props.message = item.props.becomes.bin;
-                                    item.props['data-message'] = item.props.becomes.bin;
-                                    items[index] = item;
-                                    this.setState({items}, () => {
-                                        this.getFirstItem().removeAllClassNames();
-                                        this.updateScreenData({
-                                            keys: [this.props.refsTarget, 'refs'],
-                                            data: _.filter(this.refs, (v, k) => !k.indexOf(ITEMS)),
-                                        });
-                                    });
-                                    skoash.trigger(
-                                        'playMedia',
-                                        {ref: _.kebabCase(_.replace(item.props.becomes.name, /\d+/g, ''))}
-                                    );
-                                    this.updateScreenData({
-                                        data: {
-                                            item: {
-                                                name: _.startCase(
-                                                    _.replace(item.props.becomes.name, /\d+/g, '')
-                                                ),
-                                                pour: false,
-                                            },
-                                            'manual-dropper': {
-                                                dropClass: '',
-                                            },
-                                            truckClassName: '',
-                                        }
-                                    });
-                                    DOMNode.removeEventListener('animationend', onAnimationEnd);
-                                }
-                            }, this.props));
-                        };
-
                         if (!itemRef.state.className || !_.includes(itemRef.state.className, 'POUR')) {
+                            onAnimationEnd = () => {
+                                this.pickUp(_.defaults({
+                                    onPickUp: function () {
+                                        let items = this.state.items;
+                                        let index = this.firstItemIndex;
+                                        let item = items[index];
+                                        item.props.className = item.props.becomes.name;
+                                        item.props.message = item.props.becomes.bin;
+                                        item.props['data-message'] = item.props.becomes.bin;
+                                        items[index] = item;
+                                        this.setState({items}, this.afterSetItems);
+                                        skoash.trigger(
+                                            'playMedia',
+                                            {ref: _.kebabCase(_.replace(item.props.becomes.name, /\d+/g, ''))}
+                                        );
+                                        this.updateScreenData({
+                                            data: {
+                                                item: {
+                                                    name: _.startCase(
+                                                        _.replace(item.props.becomes.name, /\d+/g, '')
+                                                    ),
+                                                    pour: false,
+                                                },
+                                                'manual-dropper': {
+                                                    dropClass: '',
+                                                },
+                                                truckClassName: '',
+                                            }
+                                        });
+                                        DOMNode.removeEventListener('animationend', onAnimationEnd);
+                                    }
+                                }, this.props));
+                            };
+
                             DOMNode.addEventListener('animationend', onAnimationEnd);
                             itemRef.addClassName('POUR');
                             this.updateScreenData({
@@ -195,36 +215,14 @@ export default _.defaults({
                         });
 
                         if (hits === opts.maxHits) {
-                            setTimeout(() => {
-                                this.updateScreenData({
-                                    keys: ['manual-dropper', 'pickUp'],
-                                    data: true,
-                                });
-                            }, 1000);
+                            setTimeout(this.onMaxHits, 1000);
                             return;
                         }
 
                         this.updateScreenData({
                             keys: ['reveal', 'open'],
                             data: 'resort',
-                            callback: () => {
-                                setTimeout(() => {
-                                    this.updateScreenData({
-                                        data: {
-                                            reveal: {
-                                                open: null,
-                                                close: true,
-                                            },
-                                            'manual-dropper': {
-                                                pickUp: true,
-                                            },
-                                            catcher: {
-                                                caught: false,
-                                            }
-                                        }
-                                    });
-                                }, 1000);
-                            }
+                            callback: this.resortCallback,
                         });
 
                         return;
@@ -316,17 +314,6 @@ export default _.defaults({
                 <skoash.Image
                     className="hidden"
                     src={TRUCK_SRC}
-                />
-                <skoash.Animation
-                    className="fantastic-claw"
-                    frames={_.get(opts.props, 'gameState.data.fantastic-claw.frames.length', 1)}
-                    frame={0}
-                    loop={false}
-                    duration={[
-                        200, 200, 200, 500, 100, 1000, 200, 200, 200, 200, 200, 200
-                    ]}
-                    animate={opts.moveClaw}
-                    onComplete={onAnimationClawComplete}
                 />
                 <skoash.Animation
                     className="fantastic-belt"
