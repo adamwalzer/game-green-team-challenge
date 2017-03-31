@@ -61,6 +61,14 @@ let onPlay = function () {
 
 export default function (levelNumber) {
     let levelNumberWord = numberWords[levelNumber - 1];
+    let emitOnComplete;
+
+    if (levelNumber === 6) {
+        emitOnComplete = {
+            name: 'flip',
+            game: 'green-team-challenge',
+        };
+    }
 
     return function (props, ref, key, opts = {}) {
         return (
@@ -73,6 +81,7 @@ export default function (levelNumber) {
                     APPEAR: _.get(props, 'data.appear.playing'),
                 })}
                 backgroundAudio={`BKG${levelNumber}`}
+                emitOnComplete={emitOnComplete}
             >
                 <skoash.Image
                     className="hidden"
