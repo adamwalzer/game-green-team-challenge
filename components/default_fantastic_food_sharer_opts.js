@@ -148,13 +148,40 @@ export default _.defaults({
                     let DOMNode = ReactDOM.findDOMNode(itemRef);
                     let onAnimationEnd;
 
+                    if (DOMNode !== e.target) return;
+
                     this.updateScreenData({
                         key: 'truckClassName',
                         data: TILT,
                     });
-                    if (DOMNode !== e.target) return;
 
-                    if (itemRef.props.message === 'liquids') {
+                    if (opts.selectableMessage === 'liquids') {
+                        if (itemRef.props.message !== 'liquids') {
+                            let hits = opts.hits + 1;
+
+                            this.updateGameData({
+                                keys: [_.camelCase(opts.gameName), 'levels', opts.level],
+                                data: {
+                                    start: false,
+                                    score: opts.score - opts.pointsPerMiss,
+                                    hits,
+                                }
+                            });
+
+                            if (hits === opts.maxHits) {
+                                setTimeout(this.onMaxHits, 1000);
+                                return;
+                            }
+
+                            this.updateScreenData({
+                                keys: ['reveal', 'open'],
+                                data: 'resort',
+                                callback: this.resortCallback,
+                            });
+
+                            return;
+                        }
+
                         if (!itemRef.state.className || !_.includes(itemRef.state.className, 'POUR')) {
                             onAnimationEnd = () => {
                                 this.pickUp(_.defaults({
@@ -197,6 +224,7 @@ export default _.defaults({
                                 data: true,
                             });
                         }
+                        return;
                     }
 
                     if (!this.props.dropClass) return;
@@ -239,7 +267,6 @@ export default _.defaults({
                         });
                         return;
                     }
-
                 }
             },
             onPickUp: function (itemRef) {
