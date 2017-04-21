@@ -130,7 +130,23 @@ export default _.defaults({
             onDrag: function () {
                 this.playMedia('drag');
             },
-            onDrop: function () {
+            onDrop: function (draggable) {
+                let endX = draggable.state.endX;
+                let endY = draggable.state.endY;
+
+                if (endX < 0 || endX > 880) {
+                    endX = 480;
+                }
+
+                if (endY < 0 || endY > 480) {
+                    endY = 270;
+                }
+
+                draggable.setState({
+                    endX,
+                    endY
+                });
+
                 this.playMedia('drop');
             },
         };
