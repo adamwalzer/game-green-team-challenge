@@ -284,7 +284,13 @@
             }
         }
 
-        &.open-resort,
+        &.open-resort {
+            .close-reveal {
+                @include cover;
+                opacity: 0;
+            }
+        }
+
         &.open-complete {
             .close-reveal {
                 display: none;
